@@ -11,10 +11,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { fetchPresignedUrl } from "@/app/actions/aws";
+import { subtle } from "crypto";
 
 export default function UploadPage() {
   const [dragActive, setDragActive] = useState(false);
-  const [files, setFiles] = useState<File[]>([]);
+  const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
   const handleDrag = useCallback((e: React.DragEvent) => {
@@ -33,39 +35,64 @@ export default function UploadPage() {
     setDragActive(false);
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const newFiles = Array.from(e.dataTransfer.files).filter((file) =>
-        file.type.startsWith("image/")
+      const newFile = Array.from(e.dataTransfer.files).find((f) =>
+        f.type.startsWith("image/")
       );
-      setFiles((prev) => [...prev, ...newFiles]);
+      setFile(newFile ?? null);
     }
   }, []);
 
   const handleFileSelect = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.target.files && e.target.files[0]) {
-        const newFiles = Array.from(e.target.files).filter((file) =>
-          file.type.startsWith("image/")
+        const newFile = Array.from(e.target.files).find((f) =>
+          f.type.startsWith("image/")
         );
-        setFiles((prev) => [...prev, ...newFiles]);
+        setFile(newFile ?? null);
       }
     },
     []
   );
 
-  const removeFile = useCallback((index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
+  const removeFile = useCallback(() => {
+    setFile(null);
   }, []);
 
   const handleUpload = useCallback(async () => {
-    if (files.length === 0) return;
+    if (!file) return;
 
+    const buffer = await file.arrayBuffer();
+    const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    console.log(hashHex);
+    return;
+
+    const { fields, url } = await fetchPresignedUrl({
+      contentType: file.type,
+      fileId: hashHex,
+    });
     setUploading(true);
-    // Simulate upload delay - replace with actual upload logic
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const formData = new FormData();
+    Object.entries(fields).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    formData.append("file", file);
+    const response = await fetch(url, {
+      method: "POST",
+      body: formData,
+    });
+    if (!response.ok) {
+      alert("Image Upload Failed Try Again !");
+    } else {
+    }
+
     setUploading(false);
-    setFiles([]);
+    setFile(null);
     // Show success message or redirect
-  }, [files]);
+  }, [file]);
 
   return (
     <div className="space-y-6">
@@ -85,7 +112,7 @@ export default function UploadPage() {
         </CardHeader>
         <CardContent>
           <div
-            className={`relative flex min-h-[300px] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed transition-colors ${
+            className={`relative flex min-h-75 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed transition-colors ${
               dragActive
                 ? "border-primary bg-primary/5"
                 : "border-muted-foreground/25 hover:border-primary/50"
@@ -100,7 +127,6 @@ export default function UploadPage() {
               id="file-input"
               type="file"
               accept="image/*"
-              multiple
               className="hidden"
               onChange={handleFileSelect}
             />
@@ -116,51 +142,44 @@ export default function UploadPage() {
         </CardContent>
       </Card>
 
-      {files.length > 0 && (
+      {file && (
         <Card>
           <CardHeader>
-            <CardTitle>Selected Files ({files.length})</CardTitle>
-            <CardDescription>
-              Review your files before uploading.
-            </CardDescription>
+            <CardTitle>Selected File</CardTitle>
+            <CardDescription>Review before uploading.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {files.map((file, index) => (
-                <div
-                  key={`${file.name}-${index}`}
-                  className="flex items-center gap-4 rounded-lg border p-3"
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded bg-muted">
-                    <ImageIcon className="h-6 w-6 text-muted-foreground" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="truncate font-medium">{file.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {(file.size / 1024 / 1024).toFixed(2)} MB
-                    </p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeFile(index);
-                    }}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
+              <div className="flex items-center gap-4 rounded-lg border p-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded bg-muted">
+                  <ImageIcon className="h-6 w-6 text-muted-foreground" />
                 </div>
-              ))}
+                <div className="flex-1 min-w-0">
+                  <p className="truncate font-medium">{file.name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {(file.size / 1024 / 1024).toFixed(2)} MB
+                  </p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeFile();
+                  }}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
 
             <div className="mt-6 flex justify-end gap-3">
               <Button
                 variant="outline"
-                onClick={() => setFiles([])}
+                onClick={() => setFile(null)}
                 disabled={uploading}
               >
-                Clear All
+                Clear
               </Button>
               <Button onClick={handleUpload} disabled={uploading}>
                 {uploading ? (
@@ -171,8 +190,7 @@ export default function UploadPage() {
                 ) : (
                   <>
                     <Check className="mr-2 h-4 w-4" />
-                    Upload {files.length}{" "}
-                    {files.length === 1 ? "File" : "Files"}
+                    Upload File
                   </>
                 )}
               </Button>
