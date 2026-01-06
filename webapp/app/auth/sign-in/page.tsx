@@ -12,7 +12,7 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <div className="w-full max-w-md space-y-8 rounded-lg bg-white p-8 shadow-lg dark:bg-gray-950">
         <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-50">
@@ -26,7 +26,7 @@ export default function SignInPage() {
         <div className="mt-8">
           <Button
             onClick={handleGoogleLogin}
-            className="w-full"
+            className="w-full cursor-pointer"
             variant="outline"
             size="lg"
           >
