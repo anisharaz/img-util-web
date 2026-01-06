@@ -387,7 +387,8 @@ export const ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  Images: 'Images'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -403,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification"
+    modelProps: "user" | "session" | "account" | "verification" | "images"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -703,6 +704,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Images: {
+      payload: Prisma.$ImagesPayload<ExtArgs>
+      fields: Prisma.ImagesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ImagesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ImagesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesPayload>
+        }
+        findFirst: {
+          args: Prisma.ImagesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ImagesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesPayload>
+        }
+        findMany: {
+          args: Prisma.ImagesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesPayload>[]
+        }
+        create: {
+          args: Prisma.ImagesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesPayload>
+        }
+        createMany: {
+          args: Prisma.ImagesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ImagesCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesPayload>[]
+        }
+        delete: {
+          args: Prisma.ImagesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesPayload>
+        }
+        update: {
+          args: Prisma.ImagesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesPayload>
+        }
+        deleteMany: {
+          args: Prisma.ImagesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ImagesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ImagesUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesPayload>[]
+        }
+        upsert: {
+          args: Prisma.ImagesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImagesPayload>
+        }
+        aggregate: {
+          args: Prisma.ImagesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateImages>
+        }
+        groupBy: {
+          args: Prisma.ImagesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImagesGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ImagesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImagesCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -799,6 +874,17 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const ImagesScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  hash: 'hash',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ImagesScalarFieldEnum = (typeof ImagesScalarFieldEnum)[keyof typeof ImagesScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -978,6 +1064,7 @@ export type GlobalOmitConfig = {
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
+  images?: Prisma.ImagesOmit
 }
 
 /* Types for Logging */
