@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   ImageIcon,
   Upload,
@@ -32,6 +32,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { authClient } from "@/lib/auth-client";
 
 const navItems = [
   {
@@ -46,15 +47,20 @@ const navItems = [
   },
 ];
 
-// Mock user data
-const mockUser = {
-  name: "John Doe",
-  email: "john@example.com",
-  avatar: "",
-};
-
 export function AppSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { data: session } = authClient.useSession();
+
+  const user = session?.user;
+  const userName = user?.name || "User";
+  const userEmail = user?.email || "";
+  const userAvatar = user?.image || "";
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    router.push("/auth/sign-in");
+  };
 
   return (
     <Sidebar collapsible="icon">
@@ -112,20 +118,18 @@ export function AppSidebar() {
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src={mockUser.avatar} alt={mockUser.name} />
+                    <AvatarImage src={userAvatar} alt={userName} />
                     <AvatarFallback className="rounded-lg">
-                      {mockUser.name
+                      {userName
                         .split(" ")
                         .map((n) => n[0])
                         .join("")}
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">
-                      {mockUser.name}
-                    </span>
+                    <span className="truncate font-semibold">{userName}</span>
                     <span className="truncate text-xs text-muted-foreground">
-                      {mockUser.email}
+                      {userEmail}
                     </span>
                   </div>
                   <ChevronUp className="ml-auto size-4" />
@@ -146,7 +150,7 @@ export function AppSidebar() {
                   Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="mr-2 size-4" />
                   Log out
                 </DropdownMenuItem>
