@@ -5,6 +5,7 @@ import {
   DynamoDBDocumentClient,
   GetCommand,
   ScanCommand,
+  DeleteCommand,
 } from "@aws-sdk/lib-dynamodb";
 
 export interface ConvertedImageUrl {
@@ -99,4 +100,25 @@ export async function getAllImagesForUser({
 
   const response = await docClient.send(command);
   return (response.Items || []) as DynamoDBImage[];
+}
+
+export async function deleteImageFromDynamoDB({
+  userId,
+  imageId,
+  tableName,
+}: {
+  userId: string;
+  imageId: string;
+  tableName: string;
+}): Promise<void> {
+  const key = `${userId}-${imageId}`;
+
+  const command = new DeleteCommand({
+    TableName: tableName,
+    Key: {
+      "userid-imageid": key,
+    },
+  });
+
+  await docClient.send(command);
 }

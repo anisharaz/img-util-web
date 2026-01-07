@@ -1,11 +1,5 @@
 import Link from "next/link";
-import {
-  ArrowLeft,
-  Download,
-  ExternalLink,
-  Trash2,
-  Loader2,
-} from "lucide-react";
+import { ArrowLeft, Download, ExternalLink, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,6 +16,7 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { CopyButton } from "./copy-button";
 import { ReloadButton } from "./reload-button";
+import { DeleteButton } from "./delete-button";
 import prisma from "@/lib/db";
 
 export default async function ImageDetailPage({
@@ -105,10 +100,7 @@ export default async function ImageDetailPage({
           <h1 className="text-2xl font-bold tracking-tight">{imageName}</h1>
           <p className="text-muted-foreground">Image ID: {id}</p>
         </div>
-        <Button variant="destructive" size="sm">
-          <Trash2 className="mr-2 h-4 w-4" />
-          Delete
-        </Button>
+        <DeleteButton imageId={id} />
       </div>
 
       {/* Processing Banner */}
