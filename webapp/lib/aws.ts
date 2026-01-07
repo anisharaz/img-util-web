@@ -122,3 +122,49 @@ export async function deleteImageFromDynamoDB({
 
   await docClient.send(command);
 }
+
+export async function getTotalStorageForUser({
+  userId,
+  tableName,
+}: {
+  userId: string;
+  tableName: string;
+}): Promise<number> {
+  const images = await getAllImagesForUser({ userId, tableName });
+
+  let totalBytes = 0;
+  for (const image of images) {
+    if (image.convertedImageUrls) {
+      for (const convertedImage of image.convertedImageUrls) {
+        // Parse the size string (e.g., "1.5 MB", "500 KB", "2048 bytes")
+        const sizeStr = convertedImage.size;
+        if (sizeStr) {
+          const match = sizeStr.match(/^([\d.]+)\s*(\w+)$/i);
+          if (match) {
+            const value = parseFloat(match[1]);
+            const unit = match[2].toLowerCase();
+            if (unit === "bytes" || unit === "b") {
+              totalBytes += value;
+            } else if (unit === "kb") {
+              totalBytes += value * 1024;
+            } else if (unit === "mb") {
+              totalBytes += value * 1024 * 1024;
+            } else if (unit === "gb") {
+              totalBytes += value * 1024 * 1024 * 1024;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return totalBytes;
+}
+
+export function formatBytes(bytes: number): string {
+  if (bytes === 0) return "0 Bytes";
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+}

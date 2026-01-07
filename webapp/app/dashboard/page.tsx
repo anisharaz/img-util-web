@@ -8,8 +8,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import prisma from "@/lib/db";
+import { getTotalStorageForUser, formatBytes } from "@/lib/aws";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const session = await auth.api.getSession({ headers: await headers() });
+  const userId = session?.user?.id;
+
+  let totalImages = 0;
+  let storageUsed = "0 Bytes";
+
+  totalImages = await prisma.images.count({
+    where: { userId },
+  });
+
+  // Get total storage from DynamoDB
+  const totalBytes = await getTotalStorageForUser({
+    userId: userId as string,
+    tableName: process.env.DYNAMODB_TABLE_NAME as string,
+  });
+  storageUsed = formatBytes(totalBytes);
+
   return (
     <div className="space-y-6">
       <div>
@@ -58,24 +79,18 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Quick Stats - Mock Data */}
-      <div className="grid gap-4 md:grid-cols-3">
+      {/* Quick Stats */}
+      <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>Total Images</CardDescription>
-            <CardTitle className="text-4xl">12</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Resized Versions</CardDescription>
-            <CardTitle className="text-4xl">48</CardTitle>
+            <CardTitle className="text-4xl">{totalImages}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>Storage Used</CardDescription>
-            <CardTitle className="text-4xl">24 MB</CardTitle>
+            <CardTitle className="text-4xl">{storageUsed}</CardTitle>
           </CardHeader>
         </Card>
       </div>
