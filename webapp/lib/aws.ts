@@ -24,19 +24,18 @@ export interface DynamoDBImage {
 
 export const s3Client = new S3Client({
   region: "us-east-1",
-  // TODO: use this while deploying
-  //   credentials: {
-  //     accessKeyId: process.env.AWS_KEY as string,
-  //     secretAccessKey: process.env.AWS_SECRET as string,
-  //   },
+  credentials: {
+    accessKeyId: process.env.AWS_KEY as string,
+    secretAccessKey: process.env.AWS_SECRET as string,
+  },
 });
 
 const dynamoDBClient = new DynamoDBClient({
   region: "us-east-1",
-  // credentials: {
-  //   accessKeyId: process.env.AWS_KEY as string,
-  //   secretAccessKey: process.env.AWS_SECRET as string,
-  // },
+  credentials: {
+    accessKeyId: process.env.AWS_KEY as string,
+    secretAccessKey: process.env.AWS_SECRET as string,
+  },
 });
 
 const docClient = DynamoDBDocumentClient.from(dynamoDBClient);

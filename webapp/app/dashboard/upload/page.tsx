@@ -65,24 +65,30 @@ export default function UploadPage() {
     e.stopPropagation();
     setDragActive(false);
 
+    const allowedTypes = ["image/png", "image/jpeg"];
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const newFile = Array.from(e.dataTransfer.files).find((f) =>
-        f.type.startsWith("image/")
+        allowedTypes.includes(f.type)
       );
-      setFile(newFile ?? null);
+      if (newFile) {
+        setFile(newFile);
+      } else {
+        alert("Please select a PNG or JPEG file");
+      }
     }
   }, []);
 
   const handleFileSelect = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
+      const allowedTypes = ["image/png", "image/jpeg"];
       if (e.target.files && e.target.files[0]) {
         const newFile = Array.from(e.target.files).find((f) =>
-          f.type.startsWith("image/")
+          allowedTypes.includes(f.type)
         );
         if (newFile) {
           setFile(newFile);
         } else {
-          alert("Please select a valid image file");
+          alert("Please select a PNG or JPEG file");
         }
       }
       e.target.value = "";
@@ -142,14 +148,14 @@ export default function UploadPage() {
           <CardDescription>
             {file
               ? "Review before uploading."
-              : "Drag and drop your images here, or click to browse."}
+              : "Drag and drop your images here, or click to browse. Only PNG and JPEG files are accepted."}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Input
             id="file-input"
             type="file"
-            accept="image/*"
+            accept="image/png,image/jpeg"
             className="hidden"
             onChange={handleFileSelect}
           />
