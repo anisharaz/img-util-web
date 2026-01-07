@@ -231,7 +231,7 @@ export default function UploadPage() {
                 or click to browse
               </p>
               <p className="mt-4 text-xs text-muted-foreground">
-                Supports: JPG, PNG, GIF, WebP (Max 10MB)
+                Supports: JPG, PNG, (Max 10MB)
               </p>
             </div>
           )}
