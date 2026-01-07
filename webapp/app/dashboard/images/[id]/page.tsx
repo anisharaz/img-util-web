@@ -32,28 +32,24 @@ const getMockImageData = (id: string) => ({
   format: "JPEG",
   resizedVersions: [
     {
-      size: "128x128",
-      label: "Thumbnail",
+      size: "12KB",
+      resolution: "128x128",
       url: `https://picsum.photos/seed/${id}/128/128`,
-      fileSize: "12 KB",
     },
     {
-      size: "256x256",
-      label: "Small",
+      size: "45KB",
+      resolution: "256x256",
       url: `https://picsum.photos/seed/${id}/256/256`,
-      fileSize: "32 KB",
     },
     {
-      size: "512x512",
-      label: "Medium",
+      size: "120KB",
+      resolution: "512x512",
       url: `https://picsum.photos/seed/${id}/512/512`,
-      fileSize: "89 KB",
     },
     {
-      size: "1024x1024",
-      label: "Large",
-      url: `https://picsum.photos/seed/${id}/1024/1024`,
-      fileSize: "245 KB",
+      size: "350KB",
+      resolution: "1024x768",
+      url: `https://picsum.photos/seed/${id}/1024/768`,
     },
   ],
 });
@@ -219,9 +215,8 @@ export default function ImageDetailPage({
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Badge variant="secondary">{version.label}</Badge>
                     <span className="text-xs text-muted-foreground">
-                      {version.fileSize}
+                      {version.resolution}
                     </span>
                   </div>
                   <p className="text-sm font-medium">{version.size}</p>
