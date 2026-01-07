@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import { GeneratePreSignedUrl } from "@/lib/aws";
+import { headers } from "next/headers";
 
 export async function fetchPresignedUrl({
   contentType,
@@ -10,7 +11,7 @@ export async function fetchPresignedUrl({
   contentType: string;
   fileName: string;
 }) {
-  const session = (await auth.$context).session;
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
     throw new Error("Unauthorized");
   }
