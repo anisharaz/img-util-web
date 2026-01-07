@@ -1,15 +1,5 @@
-"use client";
-
-import { use, useState } from "react";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  Copy,
-  Check,
-  Download,
-  ExternalLink,
-  Trash2,
-} from "lucide-react";
+import { ArrowLeft, Download, ExternalLink, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,78 +10,62 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { imagesFromDynamodb, type DynamoDBImage } from "@/lib/aws";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
+import { CopyButton } from "./copy-button";
 
-// Mock data for a single image with resized versions
-const getMockImageData = (id: string) => ({
-  id,
-  name: "landscape-photo.jpg",
-  originalUrl: `https://picsum.photos/seed/${id}/1600/1200`,
-  uploadedAt: "2026-01-05",
-  fileSize: "2.4 MB",
-  dimensions: "1600 x 1200",
-  format: "JPEG",
-  resizedVersions: [
-    {
-      size: "12KB",
-      resolution: "128x128",
-      url: `https://picsum.photos/seed/${id}/128/128`,
-    },
-    {
-      size: "45KB",
-      resolution: "256x256",
-      url: `https://picsum.photos/seed/${id}/256/256`,
-    },
-    {
-      size: "120KB",
-      resolution: "512x512",
-      url: `https://picsum.photos/seed/${id}/512/512`,
-    },
-    {
-      size: "350KB",
-      resolution: "1024x768",
-      url: `https://picsum.photos/seed/${id}/1024/768`,
-    },
-  ],
-});
-
-function CopyButton({ url }: { url: string }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <Button
-      variant="outline"
-      size="sm"
-      onClick={handleCopy}
-      className="shrink-0"
-    >
-      {copied ? (
-        <>
-          <Check className="mr-2 h-4 w-4 text-green-500" />
-          Copied!
-        </>
-      ) : (
-        <>
-          <Copy className="mr-2 h-4 w-4" />
-          Copy URL
-        </>
-      )}
-    </Button>
-  );
-}
-
-export default function ImageDetailPage({
+export default async function ImageDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = use(params);
-  const image = getMockImageData(id);
+  const { id } = await params;
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const userId = session?.user?.id;
+  if (!userId) {
+    notFound();
+  }
+
+  const image = (await imagesFromDynamodb({
+    userId,
+    imageId: id,
+    tableName: process.env.DYNAMODB_TABLE_NAME as string,
+  })) as DynamoDBImage | undefined;
+
+  if (!image) {
+    notFound();
+  }
+
+  // Get the original image (highest resolution)
+  const originalImage = image.convertedImageUrls?.find((img) =>
+    img.url.includes("/original.")
+  );
+
+  // Get resized versions (exclude original)
+  const resizedVersions =
+    image.convertedImageUrls?.filter(
+      (img) => !img.url.includes("/original.")
+    ) || [];
+
+  // Extract filename from imageId
+  const getImageName = (imageId: string) => {
+    const parts = imageId.split("_");
+    return parts.slice(1).join("_") || imageId;
+  };
+
+  // Extract format from URL
+  const getFormat = (url: string) => {
+    const ext = url.split(".").pop()?.toUpperCase();
+    return ext || "Unknown";
+  };
+
+  const imageName = getImageName(image.imageId);
+  const format = originalImage ? getFormat(originalImage.url) : "Unknown";
 
   return (
     <div className="space-y-6">
@@ -103,10 +77,8 @@ export default function ImageDetailPage({
           </Link>
         </Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-bold tracking-tight">{image.name}</h1>
-          <p className="text-muted-foreground">
-            Uploaded on {image.uploadedAt}
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight">{imageName}</h1>
+          <p className="text-muted-foreground">Image ID: {image.imageId}</p>
         </div>
         <Button variant="destructive" size="sm">
           <Trash2 className="mr-2 h-4 w-4" />
@@ -120,23 +92,23 @@ export default function ImageDetailPage({
           <CardHeader>
             <CardTitle>Original Image</CardTitle>
             <CardDescription>
-              {image.dimensions} • {image.fileSize} • {image.format}
+              {originalImage?.resolution} • {originalImage?.size} • {format}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={image.originalUrl}
-                alt={image.name}
+                src={originalImage?.url}
+                alt={imageName}
                 className="h-full w-full object-contain"
               />
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
-              <CopyButton url={image.originalUrl} />
+              {originalImage && <CopyButton url={originalImage.url} />}
               <Button variant="outline" size="sm" asChild>
                 <a
-                  href={image.originalUrl}
+                  href={originalImage?.url}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -145,7 +117,7 @@ export default function ImageDetailPage({
                 </a>
               </Button>
               <Button variant="outline" size="sm" asChild>
-                <a href={image.originalUrl} download>
+                <a href={originalImage?.url} download>
                   <Download className="mr-2 h-4 w-4" />
                   Download
                 </a>
@@ -162,29 +134,29 @@ export default function ImageDetailPage({
           <CardContent className="space-y-4">
             <div>
               <p className="text-sm text-muted-foreground">File Name</p>
-              <p className="font-medium">{image.name}</p>
+              <p className="font-medium">{imageName}</p>
             </div>
             <Separator />
             <div>
               <p className="text-sm text-muted-foreground">Dimensions</p>
-              <p className="font-medium">{image.dimensions}</p>
+              <p className="font-medium">
+                {originalImage?.resolution || "N/A"}
+              </p>
             </div>
             <Separator />
             <div>
               <p className="text-sm text-muted-foreground">File Size</p>
-              <p className="font-medium">{image.fileSize}</p>
+              <p className="font-medium">{originalImage?.size || "N/A"}</p>
             </div>
             <Separator />
             <div>
               <p className="text-sm text-muted-foreground">Format</p>
-              <p className="font-medium">{image.format}</p>
+              <p className="font-medium">{format}</p>
             </div>
             <Separator />
             <div>
               <p className="text-sm text-muted-foreground">Resized Versions</p>
-              <p className="font-medium">
-                {image.resizedVersions.length} sizes
-              </p>
+              <p className="font-medium">{resizedVersions.length} sizes</p>
             </div>
           </CardContent>
         </Card>
@@ -200,16 +172,16 @@ export default function ImageDetailPage({
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {image.resizedVersions.map((version) => (
+            {resizedVersions.map((version) => (
               <div
-                key={version.size}
+                key={version.url}
                 className="rounded-lg border p-4 space-y-3"
               >
                 <div className="relative aspect-square overflow-hidden rounded-md bg-muted">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={version.url}
-                    alt={`${image.name} - ${version.size}`}
+                    alt={`${imageName} - ${version.resolution}`}
                     className="h-full w-full object-cover"
                   />
                 </div>
@@ -236,16 +208,16 @@ export default function ImageDetailPage({
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {image.resizedVersions.map((version) => (
+            {image.convertedImageUrls?.map((version) => (
               <div
-                key={version.size}
+                key={version.url}
                 className="flex items-center gap-3 rounded-lg border p-3"
               >
                 <Badge
                   variant="outline"
-                  className="shrink-0 w-20 justify-center"
+                  className="shrink-0 w-24 justify-center"
                 >
-                  {version.size}
+                  {version.resolution}
                 </Badge>
                 <code className="flex-1 truncate text-sm bg-muted px-2 py-1 rounded">
                   {version.url}
