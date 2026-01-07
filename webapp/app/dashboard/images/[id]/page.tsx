@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { ArrowLeft, Download, ExternalLink, Trash2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Download,
+  ExternalLink,
+  Trash2,
+  Loader2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,6 +21,8 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { CopyButton } from "./copy-button";
+import { ReloadButton } from "./reload-button";
+import prisma from "@/lib/db";
 
 export default async function ImageDetailPage({
   params,
@@ -31,24 +39,41 @@ export default async function ImageDetailPage({
     notFound();
   }
 
-  const image = (await imagesFromDynamodb({
+  console.log(id, userId);
+
+  // First check if the image exists in Prisma (PostgreSQL)
+  const prismaImage = await prisma.images.findFirst({
+    where: {
+      imageId: id,
+      userId: userId,
+    },
+  });
+
+  if (!prismaImage) {
+    notFound();
+  }
+
+  // Try to fetch from DynamoDB
+  const dynamoImage = (await imagesFromDynamodb({
     userId,
     imageId: id,
     tableName: process.env.DYNAMODB_TABLE_NAME as string,
   })) as DynamoDBImage | undefined;
 
-  if (!image) {
-    notFound();
-  }
+  // Check if still processing (no DynamoDB record or empty convertedImageUrls)
+  const isProcessing =
+    !dynamoImage ||
+    !dynamoImage.convertedImageUrls ||
+    dynamoImage.convertedImageUrls.length === 0;
 
   // Get the original image (highest resolution)
-  const originalImage = image.convertedImageUrls?.find((img) =>
+  const originalImage = dynamoImage?.convertedImageUrls?.find((img) =>
     img.url.includes("/original.")
   );
 
   // Get resized versions (exclude original)
   const resizedVersions =
-    image.convertedImageUrls?.filter(
+    dynamoImage?.convertedImageUrls?.filter(
       (img) => !img.url.includes("/original.")
     ) || [];
 
@@ -64,7 +89,7 @@ export default async function ImageDetailPage({
     return ext || "Unknown";
   };
 
-  const imageName = getImageName(image.imageId);
+  const imageName = getImageName(id);
   const format = originalImage ? getFormat(originalImage.url) : "Unknown";
 
   return (
@@ -78,7 +103,7 @@ export default async function ImageDetailPage({
         </Button>
         <div className="flex-1">
           <h1 className="text-2xl font-bold tracking-tight">{imageName}</h1>
-          <p className="text-muted-foreground">Image ID: {image.imageId}</p>
+          <p className="text-muted-foreground">Image ID: {id}</p>
         </div>
         <Button variant="destructive" size="sm">
           <Trash2 className="mr-2 h-4 w-4" />
@@ -86,43 +111,77 @@ export default async function ImageDetailPage({
         </Button>
       </div>
 
+      {/* Processing Banner */}
+      {isProcessing && (
+        <Card className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20">
+          <CardContent className="flex items-center justify-between py-4">
+            <ReloadButton />
+            <div className="flex items-center gap-3">
+              <Loader2 className="h-5 w-5 animate-spin text-yellow-600" />
+              <div>
+                <p className="font-medium text-yellow-800 dark:text-yellow-200">
+                  Image is being processed
+                </p>
+                <p className="text-sm text-yellow-600 dark:text-yellow-400">
+                  Your image is being converted to multiple sizes. This may take
+                  a moment.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Original Image Preview */}
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Original Image</CardTitle>
             <CardDescription>
-              {originalImage?.resolution} • {originalImage?.size} • {format}
+              {isProcessing
+                ? "Processing..."
+                : `${originalImage?.resolution} • ${originalImage?.size} • ${format}`}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={originalImage?.url}
-                alt={imageName}
-                className="h-full w-full object-contain"
-              />
+              {isProcessing ? (
+                <div className="flex h-full w-full flex-col items-center justify-center gap-3">
+                  <Loader2 className="h-10 w-10 animate-spin text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">
+                    Processing image...
+                  </p>
+                </div>
+              ) : (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={originalImage?.url}
+                  alt={imageName}
+                  className="h-full w-full object-contain"
+                />
+              )}
             </div>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {originalImage && <CopyButton url={originalImage.url} />}
-              <Button variant="outline" size="sm" asChild>
-                <a
-                  href={originalImage?.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  Open Original
-                </a>
-              </Button>
-              <Button variant="outline" size="sm" asChild>
-                <a href={originalImage?.url} download>
-                  <Download className="mr-2 h-4 w-4" />
-                  Download
-                </a>
-              </Button>
-            </div>
+            {!isProcessing && (
+              <div className="mt-4 flex flex-wrap gap-2">
+                {originalImage && <CopyButton url={originalImage.url} />}
+                <Button variant="outline" size="sm" asChild>
+                  <a
+                    href={originalImage?.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    Open Original
+                  </a>
+                </Button>
+                <Button variant="outline" size="sm" asChild>
+                  <a href={originalImage?.url} download>
+                    <Download className="mr-2 h-4 w-4" />
+                    Download
+                  </a>
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -140,23 +199,40 @@ export default async function ImageDetailPage({
             <div>
               <p className="text-sm text-muted-foreground">Dimensions</p>
               <p className="font-medium">
-                {originalImage?.resolution || "N/A"}
+                {isProcessing
+                  ? "Processing..."
+                  : originalImage?.resolution || "N/A"}
               </p>
             </div>
             <Separator />
             <div>
               <p className="text-sm text-muted-foreground">File Size</p>
-              <p className="font-medium">{originalImage?.size || "N/A"}</p>
+              <p className="font-medium">
+                {isProcessing ? "Processing..." : originalImage?.size || "N/A"}
+              </p>
             </div>
             <Separator />
             <div>
               <p className="text-sm text-muted-foreground">Format</p>
-              <p className="font-medium">{format}</p>
+              <p className="font-medium">
+                {isProcessing ? "Processing..." : format}
+              </p>
             </div>
             <Separator />
             <div>
               <p className="text-sm text-muted-foreground">Resized Versions</p>
-              <p className="font-medium">{resizedVersions.length} sizes</p>
+              <p className="font-medium">
+                {isProcessing
+                  ? "Processing..."
+                  : `${resizedVersions.length} sizes`}
+              </p>
+            </div>
+            <Separator />
+            <div>
+              <p className="text-sm text-muted-foreground">Uploaded</p>
+              <p className="font-medium">
+                {prismaImage.createdAt.toLocaleDateString()}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -167,67 +243,81 @@ export default async function ImageDetailPage({
         <CardHeader>
           <CardTitle>Resized Versions</CardTitle>
           <CardDescription>
-            Click &quot;Copy URL&quot; to copy the image URL to your clipboard.
+            {isProcessing
+              ? "Images are being processed. Click reload to check status."
+              : 'Click "Copy URL" to copy the image URL to your clipboard.'}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {resizedVersions.map((version) => (
-              <div
-                key={version.url}
-                className="rounded-lg border p-4 space-y-3"
-              >
-                <div className="relative aspect-square overflow-hidden rounded-md bg-muted">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={version.url}
-                    alt={`${imageName} - ${version.resolution}`}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">
-                      {version.resolution}
-                    </span>
+          {isProcessing ? (
+            <div className="flex flex-col items-center justify-center py-12 gap-4">
+              <Loader2 className="h-10 w-10 animate-spin text-muted-foreground" />
+              <p className="text-muted-foreground">
+                Your images are being processed...
+              </p>
+              <ReloadButton />
+            </div>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {resizedVersions.map((version) => (
+                <div
+                  key={version.url}
+                  className="rounded-lg border p-4 space-y-3"
+                >
+                  <div className="relative aspect-square overflow-hidden rounded-md bg-muted">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={version.url}
+                      alt={`${imageName} - ${version.resolution}`}
+                      className="h-full w-full object-cover"
+                    />
                   </div>
-                  <p className="text-sm font-medium">{version.size}</p>
-                  <CopyButton url={version.url} />
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">
+                        {version.resolution}
+                      </span>
+                    </div>
+                    <p className="text-sm font-medium">{version.size}</p>
+                    <CopyButton url={version.url} />
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 
       {/* URL Quick Copy Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Copy URLs</CardTitle>
-          <CardDescription>Copy URLs for all sizes at once.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {image.convertedImageUrls?.map((version) => (
-              <div
-                key={version.url}
-                className="flex items-center gap-3 rounded-lg border p-3"
-              >
-                <Badge
-                  variant="outline"
-                  className="shrink-0 w-24 justify-center"
+      {!isProcessing && dynamoImage?.convertedImageUrls && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Copy URLs</CardTitle>
+            <CardDescription>Copy URLs for all sizes at once.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {dynamoImage.convertedImageUrls.map((version) => (
+                <div
+                  key={version.url}
+                  className="flex items-center gap-3 rounded-lg border p-3"
                 >
-                  {version.resolution}
-                </Badge>
-                <code className="flex-1 truncate text-sm bg-muted px-2 py-1 rounded">
-                  {version.url}
-                </code>
-                <CopyButton url={version.url} />
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+                  <Badge
+                    variant="outline"
+                    className="shrink-0 w-24 justify-center"
+                  >
+                    {version.resolution}
+                  </Badge>
+                  <code className="flex-1 truncate text-sm bg-muted px-2 py-1 rounded">
+                    {version.url}
+                  </code>
+                  <CopyButton url={version.url} />
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

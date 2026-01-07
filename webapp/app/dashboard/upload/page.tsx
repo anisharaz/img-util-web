@@ -116,8 +116,11 @@ export default function UploadPage() {
     if (!response.ok) {
       alert("Image Upload Failed Try Again !");
     } else {
-      const { id } = await confirmUpload(fileKey.split("/").pop() as string);
-      setSuccessDialog({ open: true, imageId: id });
+      await confirmUpload(fileKey.split("/").pop()?.split(".")[0] as string);
+      setSuccessDialog({
+        open: true,
+        imageId: fileKey.split("/").pop()?.split(".")[0] as string,
+      });
     }
 
     setUploading(false);
