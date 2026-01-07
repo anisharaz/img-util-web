@@ -15,8 +15,8 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { CopyButton } from "./copy-button";
-import { ReloadButton } from "./reload-button";
 import { DeleteButton } from "./delete-button";
+import { AutoReload } from "./auto-reload";
 import prisma from "@/lib/db";
 
 export default async function ImageDetailPage({
@@ -33,8 +33,6 @@ export default async function ImageDetailPage({
   if (!userId) {
     notFound();
   }
-
-  console.log(id, userId);
 
   // First check if the image exists in Prisma (PostgreSQL)
   const prismaImage = await prisma.images.findFirst({
@@ -89,6 +87,9 @@ export default async function ImageDetailPage({
 
   return (
     <div className="space-y-6">
+      {/* Auto-reload when processing */}
+      <AutoReload isProcessing={isProcessing} />
+
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>
@@ -107,7 +108,6 @@ export default async function ImageDetailPage({
       {isProcessing && (
         <Card className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20">
           <CardContent className="flex items-center justify-between py-4">
-            <ReloadButton />
             <div className="flex items-center gap-3">
               <Loader2 className="h-5 w-5 animate-spin text-yellow-600" />
               <div>
@@ -247,7 +247,6 @@ export default async function ImageDetailPage({
               <p className="text-muted-foreground">
                 Your images are being processed...
               </p>
-              <ReloadButton />
             </div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
