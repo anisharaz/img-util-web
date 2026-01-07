@@ -71,7 +71,15 @@ def process_image(key: str) -> list:
 
     with Image.open(io.BytesIO(input_bytes)) as img:
         img = ImageOps.exif_transpose(img)
-        img = img.convert("RGB")
+
+        # Detect alpha channel
+        has_alpha = img.mode in ("RGBA", "LA") or (
+            img.mode == "P" and "transparency" in img.info
+        )
+
+        # Convert only if necessary
+        if not has_alpha:
+            img = img.convert("RGB")
 
         width, height = img.size
         max_original = max(width, height)
@@ -83,20 +91,18 @@ def process_image(key: str) -> list:
         base, ext = os.path.splitext(os.path.basename(key))
         directory = os.path.dirname(key)
 
-        # Change output directory from instantuploads to userimages
         output_directory = directory.replace("instantuploads", "userimages", 1)
 
-        # Copy original image to new location
-        original_output_key = f"{output_directory}/{base}_original{ext}"
+        # Copy original file unchanged
+        original_output_key = f"{output_directory}/{base}/original{ext}"
         s3.put_object(
             Bucket=IMAGE_BUCKET,
             Key=original_output_key,
             Body=input_bytes,
-            ContentType=response.get("ContentType", "image/jpeg"),
+            ContentType=response.get("ContentType", "application/octet-stream"),
             CacheControl="public, max-age=31536000, immutable",
         )
 
-        # Add original image info first
         original_url = f"{AWS_CDN_DOMAIN}/{original_output_key}"
         converted_image_urls.append(
             {
@@ -110,33 +116,44 @@ def process_image(key: str) -> list:
             resized = img.copy()
             resized.thumbnail((size, size), Image.Resampling.LANCZOS)
 
-            # Get the actual dimensions after resize
             resized_width, resized_height = resized.size
 
             buffer = io.BytesIO()
-            resized.save(
-                buffer,
-                format="JPEG",
-                quality=82,
-                optimize=True,
-                progressive=True,
-            )
-            buffer.seek(0)
 
-            # Get the file size
+            if has_alpha:
+                # Preserve transparency → PNG
+                resized.save(
+                    buffer,
+                    format="PNG",
+                    optimize=True,
+                )
+                content_type = "image/png"
+                output_ext = "png"
+            else:
+                # Opaque → JPEG
+                resized.save(
+                    buffer,
+                    format="JPEG",
+                    quality=82,
+                    optimize=True,
+                    progressive=True,
+                )
+                content_type = "image/jpeg"
+                output_ext = "jpg"
+
+            buffer.seek(0)
             file_size = buffer.getbuffer().nbytes
 
-            output_key = f"{output_directory}/{base}_{size}.jpg"
+            output_key = f"{output_directory}/{base}/{size}.{output_ext}"
 
             s3.put_object(
                 Bucket=IMAGE_BUCKET,
                 Key=output_key,
                 Body=buffer,
-                ContentType="image/jpeg",
+                ContentType=content_type,
                 CacheControl="public, max-age=31536000, immutable",
             )
 
-            # Build the URL and add to converted_image_urls
             url = f"{AWS_CDN_DOMAIN}/{output_key}"
             converted_image_urls.append(
                 {
@@ -150,7 +167,6 @@ def process_image(key: str) -> list:
                 f"Uploaded {output_key} - {resized_width}x{resized_height}, {format_size(file_size)}"
             )
 
-    # Delete original image from instantuploads location
     s3.delete_object(Bucket=IMAGE_BUCKET, Key=key)
     print(f"Deleted original image from {key}")
 

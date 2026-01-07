@@ -879,7 +879,7 @@ export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[k
 export const ImagesScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  hash: 'hash',
+  imageKey: 'imageKey',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

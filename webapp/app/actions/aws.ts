@@ -1,25 +1,23 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { GetPreSignedUrl } from "@/lib/aws";
+import { GeneratePreSignedUrl } from "@/lib/aws";
 
 export async function fetchPresignedUrl({
-  fileId,
   contentType,
-  fileExtension,
+  fileName,
 }: {
-  fileId: string;
   contentType: string;
-  fileExtension: string;
+  fileName: string;
 }) {
   const session = (await auth.$context).session;
   if (!session) {
     throw new Error("Unauthorized");
   }
   const userId = session.user.id;
-  const fileKey = `instantuploads/${userId}/${fileId}_${new Date()
+  const fileKey = `instantuploads/${userId}/${new Date()
     .toISOString()
-    .replace(/[:.]/g, "-")}.${fileExtension}`;
-  const res = await GetPreSignedUrl(fileKey, contentType);
-  return res;
+    .replace(/[:.]/g, "-")}_${fileName}`;
+  const { fields, url } = await GeneratePreSignedUrl(fileKey, contentType);
+  return { fields, url, fileKey };
 }

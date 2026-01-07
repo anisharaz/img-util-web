@@ -80,17 +80,9 @@ export default function UploadPage() {
   const handleUpload = useCallback(async () => {
     if (!file) return;
 
-    const buffer = await file.arrayBuffer();
-    const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const imageHashHex = hashArray
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
-
-    const { fields, url } = await fetchPresignedUrl({
+    const { fields, url, fileKey } = await fetchPresignedUrl({
       contentType: file.type,
-      fileId: imageHashHex,
-      fileExtension: file.name.split(".").pop()?.toLowerCase() as string,
+      fileName: file.name,
     });
 
     setUploading(true);
@@ -106,7 +98,7 @@ export default function UploadPage() {
     if (!response.ok) {
       alert("Image Upload Failed Try Again !");
     } else {
-      await confirmUpload(imageHashHex);
+      await confirmUpload(fileKey);
     }
 
     setUploading(false);

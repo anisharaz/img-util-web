@@ -3,7 +3,7 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 
-export async function confirmUpload(imageId: string) {
+export async function confirmUpload(imageKey: string) {
   const session = (await auth.$context).session;
   if (!session) {
     throw new Error("Unauthorized");
@@ -11,7 +11,7 @@ export async function confirmUpload(imageId: string) {
   await prisma.images.create({
     data: {
       userId: session.user.id,
-      hash: imageId,
+      imageKey: imageKey,
     },
   });
 }

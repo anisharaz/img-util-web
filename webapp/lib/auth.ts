@@ -1,13 +1,17 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { createAuthMiddleware } from "better-auth/api";
+import { nanoid } from "nanoid";
 import prisma from "@/lib/db";
 import { nextCookies } from "better-auth/next-js";
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
-
+  advanced: {
+    database: {
+      generateId: () => nanoid(),
+    },
+  },
   secret: process.env.AUTH_SECRET || "xyz",
   user: {
     additionalFields: {

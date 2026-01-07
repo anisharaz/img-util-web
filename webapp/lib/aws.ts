@@ -10,12 +10,14 @@ export const s3Client = new S3Client({
   //   },
 });
 
-export async function GetPreSignedUrl(fileKey: string, contentType: string) {
-  const key = fileKey;
+export async function GeneratePreSignedUrl(
+  fileKey: string,
+  contentType: string
+) {
   const { BUCKET_NAME } = process.env;
   const { url, fields } = await createPresignedPost(s3Client, {
     Bucket: BUCKET_NAME as string,
-    Key: key,
+    Key: fileKey,
     Conditions: [
       ["content-length-range", 0, 10 * 1024 * 1024], // 10 MB max
     ],
@@ -25,5 +27,5 @@ export async function GetPreSignedUrl(fileKey: string, contentType: string) {
     },
     Expires: 3600,
   });
-  return { url, fields, key };
+  return { url, fields };
 }

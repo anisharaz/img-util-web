@@ -27,7 +27,7 @@ export type AggregateImages = {
 export type ImagesMinAggregateOutputType = {
   id: string | null
   userId: string | null
-  hash: string | null
+  imageKey: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -35,7 +35,7 @@ export type ImagesMinAggregateOutputType = {
 export type ImagesMaxAggregateOutputType = {
   id: string | null
   userId: string | null
-  hash: string | null
+  imageKey: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -43,7 +43,7 @@ export type ImagesMaxAggregateOutputType = {
 export type ImagesCountAggregateOutputType = {
   id: number
   userId: number
-  hash: number
+  imageKey: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -53,7 +53,7 @@ export type ImagesCountAggregateOutputType = {
 export type ImagesMinAggregateInputType = {
   id?: true
   userId?: true
-  hash?: true
+  imageKey?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -61,7 +61,7 @@ export type ImagesMinAggregateInputType = {
 export type ImagesMaxAggregateInputType = {
   id?: true
   userId?: true
-  hash?: true
+  imageKey?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -69,7 +69,7 @@ export type ImagesMaxAggregateInputType = {
 export type ImagesCountAggregateInputType = {
   id?: true
   userId?: true
-  hash?: true
+  imageKey?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -150,7 +150,7 @@ export type ImagesGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type ImagesGroupByOutputType = {
   id: string
   userId: string
-  hash: string
+  imageKey: string
   createdAt: Date
   updatedAt: Date
   _count: ImagesCountAggregateOutputType | null
@@ -179,7 +179,7 @@ export type ImagesWhereInput = {
   NOT?: Prisma.ImagesWhereInput | Prisma.ImagesWhereInput[]
   id?: Prisma.StringFilter<"Images"> | string
   userId?: Prisma.StringFilter<"Images"> | string
-  hash?: Prisma.StringFilter<"Images"> | string
+  imageKey?: Prisma.StringFilter<"Images"> | string
   createdAt?: Prisma.DateTimeFilter<"Images"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Images"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -188,7 +188,7 @@ export type ImagesWhereInput = {
 export type ImagesOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  hash?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -200,7 +200,7 @@ export type ImagesWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ImagesWhereInput[]
   NOT?: Prisma.ImagesWhereInput | Prisma.ImagesWhereInput[]
   userId?: Prisma.StringFilter<"Images"> | string
-  hash?: Prisma.StringFilter<"Images"> | string
+  imageKey?: Prisma.StringFilter<"Images"> | string
   createdAt?: Prisma.DateTimeFilter<"Images"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Images"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -209,7 +209,7 @@ export type ImagesWhereUniqueInput = Prisma.AtLeast<{
 export type ImagesOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  hash?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ImagesCountOrderByAggregateInput
@@ -223,14 +223,14 @@ export type ImagesScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ImagesScalarWhereWithAggregatesInput | Prisma.ImagesScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Images"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Images"> | string
-  hash?: Prisma.StringWithAggregatesFilter<"Images"> | string
+  imageKey?: Prisma.StringWithAggregatesFilter<"Images"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Images"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Images"> | Date | string
 }
 
 export type ImagesCreateInput = {
   id?: string
-  hash: string
+  imageKey: string
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutImagesInput
@@ -239,14 +239,14 @@ export type ImagesCreateInput = {
 export type ImagesUncheckedCreateInput = {
   id?: string
   userId: string
-  hash: string
+  imageKey: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ImagesUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  hash?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutImagesNestedInput
@@ -255,7 +255,7 @@ export type ImagesUpdateInput = {
 export type ImagesUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  hash?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -263,14 +263,14 @@ export type ImagesUncheckedUpdateInput = {
 export type ImagesCreateManyInput = {
   id?: string
   userId: string
-  hash: string
+  imageKey: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ImagesUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  hash?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -278,7 +278,7 @@ export type ImagesUpdateManyMutationInput = {
 export type ImagesUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  hash?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -296,7 +296,7 @@ export type ImagesOrderByRelationAggregateInput = {
 export type ImagesCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  hash?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -304,7 +304,7 @@ export type ImagesCountOrderByAggregateInput = {
 export type ImagesMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  hash?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -312,7 +312,7 @@ export type ImagesMaxOrderByAggregateInput = {
 export type ImagesMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  hash?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -361,14 +361,14 @@ export type ImagesUncheckedUpdateManyWithoutUserNestedInput = {
 
 export type ImagesCreateWithoutUserInput = {
   id?: string
-  hash: string
+  imageKey: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ImagesUncheckedCreateWithoutUserInput = {
   id?: string
-  hash: string
+  imageKey: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -405,35 +405,35 @@ export type ImagesScalarWhereInput = {
   NOT?: Prisma.ImagesScalarWhereInput | Prisma.ImagesScalarWhereInput[]
   id?: Prisma.StringFilter<"Images"> | string
   userId?: Prisma.StringFilter<"Images"> | string
-  hash?: Prisma.StringFilter<"Images"> | string
+  imageKey?: Prisma.StringFilter<"Images"> | string
   createdAt?: Prisma.DateTimeFilter<"Images"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Images"> | Date | string
 }
 
 export type ImagesCreateManyUserInput = {
   id?: string
-  hash: string
+  imageKey: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ImagesUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  hash?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ImagesUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  hash?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ImagesUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  hash?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -443,7 +443,7 @@ export type ImagesUncheckedUpdateManyWithoutUserInput = {
 export type ImagesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  hash?: boolean
+  imageKey?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -452,7 +452,7 @@ export type ImagesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 export type ImagesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  hash?: boolean
+  imageKey?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -461,7 +461,7 @@ export type ImagesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type ImagesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  hash?: boolean
+  imageKey?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -470,12 +470,12 @@ export type ImagesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type ImagesSelectScalar = {
   id?: boolean
   userId?: boolean
-  hash?: boolean
+  imageKey?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ImagesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "hash" | "createdAt" | "updatedAt", ExtArgs["result"]["images"]>
+export type ImagesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "imageKey" | "createdAt" | "updatedAt", ExtArgs["result"]["images"]>
 export type ImagesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -494,7 +494,7 @@ export type $ImagesPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
-    hash: string
+    imageKey: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["images"]>
@@ -923,7 +923,7 @@ export interface Prisma__ImagesClient<T, Null = never, ExtArgs extends runtime.T
 export interface ImagesFieldRefs {
   readonly id: Prisma.FieldRef<"Images", 'String'>
   readonly userId: Prisma.FieldRef<"Images", 'String'>
-  readonly hash: Prisma.FieldRef<"Images", 'String'>
+  readonly imageKey: Prisma.FieldRef<"Images", 'String'>
   readonly createdAt: Prisma.FieldRef<"Images", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Images", 'DateTime'>
 }
