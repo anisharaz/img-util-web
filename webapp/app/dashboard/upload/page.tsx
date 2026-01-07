@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { Upload, X, Check } from "lucide-react";
+import { Upload, X, Check, CheckCircle } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,14 +12,30 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { fetchPresignedUrl } from "@/app/actions/aws";
 import { confirmUpload } from "@/app/actions";
 
 export default function UploadPage() {
+  const router = useRouter();
   const [dragActive, setDragActive] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [successDialog, setSuccessDialog] = useState<{
+    open: boolean;
+    imageId: string | null;
+  }>({
+    open: false,
+    imageId: null,
+  });
 
   // Generate preview URL when file changes
   const preview = useMemo(
@@ -95,17 +112,16 @@ export default function UploadPage() {
       method: "POST",
       body: formData,
     });
+
     if (!response.ok) {
       alert("Image Upload Failed Try Again !");
     } else {
-      await confirmUpload(fileKey.split("/").pop() as string);
+      const { id } = await confirmUpload(fileKey.split("/").pop() as string);
+      setSuccessDialog({ open: true, imageId: id });
     }
 
     setUploading(false);
     setFile(null);
-
-    // TODO: redirect to the image page after an alert
-    alert("Image Uploaded Successfully !");
   }, [file]);
 
   return (
@@ -212,6 +228,45 @@ export default function UploadPage() {
           )}
         </CardContent>
       </Card>
+
+      <Dialog
+        open={successDialog.open}
+        onOpenChange={(open) => setSuccessDialog({ open, imageId: null })}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+              <CheckCircle className="h-6 w-6 text-green-600" />
+            </div>
+            <DialogTitle className="text-center">
+              Upload Successful!
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Your image has been uploaded successfully and is now being
+              processed.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2">
+            <Button
+              variant="outline"
+              className="w-full sm:w-auto"
+              onClick={() => setSuccessDialog({ open: false, imageId: null })}
+            >
+              Upload Another
+            </Button>
+            <Button
+              className="w-full sm:w-auto"
+              onClick={() => {
+                if (successDialog.imageId) {
+                  router.push(`/dashboard/images/${successDialog.imageId}`);
+                }
+              }}
+            >
+              View Image
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

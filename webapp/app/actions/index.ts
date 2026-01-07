@@ -9,10 +9,11 @@ export async function confirmUpload(imageId: string) {
   if (!session) {
     throw new Error("Unauthorized");
   }
-  await prisma.images.create({
+  const res = await prisma.images.create({
     data: {
       userId: session.user.id,
       imageId: imageId,
     },
   });
+  return res;
 }
