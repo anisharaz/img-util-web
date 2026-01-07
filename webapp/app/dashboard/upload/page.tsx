@@ -98,7 +98,7 @@ export default function UploadPage() {
     if (!response.ok) {
       alert("Image Upload Failed Try Again !");
     } else {
-      await confirmUpload(fileKey);
+      await confirmUpload(fileKey.split("/").pop() as string);
     }
 
     setUploading(false);
