@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import {
   ImageIcon,
   Zap,
@@ -7,6 +9,7 @@ import {
   Upload,
   ArrowRight,
   Check,
+  Globe,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,8 +21,14 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { auth } from "@/lib/auth";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (session?.user) {
+    redirect("/dashboard");
+  }
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -59,7 +68,7 @@ export default function Home() {
         <section className="container mx-auto max-w-6xl px-4 py-24 md:py-32">
           <div className="flex flex-col items-center text-center">
             <Badge variant="secondary" className="mb-4">
-              Fast • Simple • Free
+              Fast • Simple • CDN Delivered
             </Badge>
             <h1 className="max-w-3xl text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
               Resize Images Instantly,{" "}
@@ -127,7 +136,7 @@ export default function Home() {
               Simple tools designed to save you time and effort.
             </p>
           </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <Card>
               <CardHeader>
                 <Zap className="h-10 w-10 text-primary" />
@@ -135,16 +144,6 @@ export default function Home() {
                 <CardDescription>
                   Upload once, get multiple sizes immediately. No waiting, no
                   processing delays.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-            <Card>
-              <CardHeader>
-                <ImageIcon className="h-10 w-10 text-primary" />
-                <CardTitle className="mt-4">Multiple Formats</CardTitle>
-                <CardDescription>
-                  Support for common image formats. Get the right size for every
-                  use case.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -165,6 +164,16 @@ export default function Home() {
                 <CardDescription>
                   Your images are stored securely and available whenever you
                   need them.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+            <Card>
+              <CardHeader>
+                <Globe className="h-10 w-10 text-primary" />
+                <CardTitle className="mt-4">CDN Delivery</CardTitle>
+                <CardDescription>
+                  Images are delivered via a global CDN for lightning-fast
+                  loading anywhere in the world.
                 </CardDescription>
               </CardHeader>
             </Card>
