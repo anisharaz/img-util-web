@@ -55,7 +55,8 @@ export const ModelName = {
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
-  Images: 'Images'
+  Images: 'Images',
+  UsageMetric: 'UsageMetric'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -142,6 +143,17 @@ export const ImagesScalarFieldEnum = {
 } as const
 
 export type ImagesScalarFieldEnum = (typeof ImagesScalarFieldEnum)[keyof typeof ImagesScalarFieldEnum]
+
+
+export const UsageMetricScalarFieldEnum = {
+  id: 'id',
+  usesrId: 'usesrId',
+  totalStorageUsed: 'totalStorageUsed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UsageMetricScalarFieldEnum = (typeof UsageMetricScalarFieldEnum)[keyof typeof UsageMetricScalarFieldEnum]
 
 
 export const SortOrder = {

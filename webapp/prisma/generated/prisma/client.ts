@@ -64,3 +64,8 @@ export type Verification = Prisma.VerificationModel
  * 
  */
 export type Images = Prisma.ImagesModel
+/**
+ * Model UsageMetric
+ * 
+ */
+export type UsageMetric = Prisma.UsageMetricModel

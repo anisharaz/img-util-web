@@ -388,7 +388,8 @@ export const ModelName = {
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
-  Images: 'Images'
+  Images: 'Images',
+  UsageMetric: 'UsageMetric'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -404,7 +405,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "images"
+    modelProps: "user" | "session" | "account" | "verification" | "images" | "usageMetric"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -778,6 +779,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    UsageMetric: {
+      payload: Prisma.$UsageMetricPayload<ExtArgs>
+      fields: Prisma.UsageMetricFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UsageMetricFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UsageMetricPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UsageMetricFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UsageMetricPayload>
+        }
+        findFirst: {
+          args: Prisma.UsageMetricFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UsageMetricPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UsageMetricFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UsageMetricPayload>
+        }
+        findMany: {
+          args: Prisma.UsageMetricFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UsageMetricPayload>[]
+        }
+        create: {
+          args: Prisma.UsageMetricCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UsageMetricPayload>
+        }
+        createMany: {
+          args: Prisma.UsageMetricCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UsageMetricCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UsageMetricPayload>[]
+        }
+        delete: {
+          args: Prisma.UsageMetricDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UsageMetricPayload>
+        }
+        update: {
+          args: Prisma.UsageMetricUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UsageMetricPayload>
+        }
+        deleteMany: {
+          args: Prisma.UsageMetricDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UsageMetricUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UsageMetricUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UsageMetricPayload>[]
+        }
+        upsert: {
+          args: Prisma.UsageMetricUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UsageMetricPayload>
+        }
+        aggregate: {
+          args: Prisma.UsageMetricAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUsageMetric>
+        }
+        groupBy: {
+          args: Prisma.UsageMetricGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UsageMetricGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UsageMetricCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UsageMetricCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -887,6 +962,17 @@ export const ImagesScalarFieldEnum = {
 export type ImagesScalarFieldEnum = (typeof ImagesScalarFieldEnum)[keyof typeof ImagesScalarFieldEnum]
 
 
+export const UsageMetricScalarFieldEnum = {
+  id: 'id',
+  usesrId: 'usesrId',
+  totalStorageUsed: 'totalStorageUsed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UsageMetricScalarFieldEnum = (typeof UsageMetricScalarFieldEnum)[keyof typeof UsageMetricScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -963,6 +1049,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -1065,6 +1165,7 @@ export type GlobalOmitConfig = {
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
   images?: Prisma.ImagesOmit
+  usageMetric?: Prisma.UsageMetricOmit
 }
 
 /* Types for Logging */

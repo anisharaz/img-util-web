@@ -2,6 +2,7 @@ import json
 import os
 import io
 import boto3
+import psycopg2
 from PIL import Image, ImageOps
 
 s3 = boto3.client("s3")
@@ -11,6 +12,7 @@ SIZES = [256, 512, 768, 1024, 1536]
 IMAGE_BUCKET = os.environ.get("IMAGE_BUCKET")
 DYNAMODB_TABLE = os.environ.get("DYNAMODB_TABLE")
 AWS_CDN_DOMAIN = os.environ.get("AWS_CDN_DOMAIN")
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 
 def format_size(size_bytes: int) -> str:
@@ -23,6 +25,54 @@ def format_size(size_bytes: int) -> str:
         return f"{size_bytes / (1024 * 1024):.2f}MB"
 
 
+def update_usage_metric(user_id: str, total_size_bytes: int):
+    """Update or create UsageMetric for the user in PostgreSQL"""
+    if not DATABASE_URL:
+        print("DATABASE_URL not set, skipping usage metric update")
+        return
+
+    total_size_mb = total_size_bytes // (1024 * 1024)  # Convert to MB
+
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+        cursor = conn.cursor()
+
+        # Check if usage metric exists for user
+        cursor.execute(
+            'SELECT id, "totalStorageUsed" FROM "UsageMetric" WHERE "usesrId" = %s',
+            (user_id,),
+        )
+        existing = cursor.fetchone()
+
+        if existing:
+            # Update existing record by adding to total storage
+            new_total = existing[1] + total_size_mb
+            cursor.execute(
+                """UPDATE "UsageMetric" 
+                   SET "totalStorageUsed" = %s, "updatedAt" = NOW() 
+                   WHERE "usesrId" = %s""",
+                (new_total, user_id),
+            )
+            print(f"Updated usage metric for user {user_id}: {new_total}MB total")
+        else:
+            # Create new record
+            import uuid
+
+            metric_id = str(uuid.uuid4())[:25]  # cuid-like id
+            cursor.execute(
+                """INSERT INTO "UsageMetric" (id, "usesrId", "totalStorageUsed", "createdAt", "updatedAt")
+                   VALUES (%s, %s, %s, NOW(), NOW())""",
+                (metric_id, user_id, total_size_mb),
+            )
+            print(f"Created usage metric for user {user_id}: {total_size_mb}MB")
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print(f"Error updating usage metric: {e}")
+
+
 def lambda_handler(event, context):
     print(event)
     tmpImageLocation = event["Records"][0]["dynamodb"]["NewImage"]["tmpImgLocation"][
@@ -31,7 +81,7 @@ def lambda_handler(event, context):
     userId = event["Records"][0]["dynamodb"]["NewImage"]["userId"]["S"]
     imageId = event["Records"][0]["dynamodb"]["NewImage"]["imageId"]["S"]
 
-    converted_image_urls = process_image(tmpImageLocation)
+    converted_image_urls, total_size_bytes = process_image(tmpImageLocation)
 
     update_dynamodb(
         userId,
@@ -39,6 +89,9 @@ def lambda_handler(event, context):
         tmpImageLocation,
         converted_image_urls,
     )
+
+    # Update usage metrics in PostgreSQL
+    update_usage_metric(userId, total_size_bytes)
 
     return {"statusCode": 200, "body": json.dumps("Image processing complete")}
 
@@ -61,9 +114,10 @@ def update_dynamodb(
     print(f"Updated DynamoDB for user {user_id}, image {image_id}")
 
 
-def process_image(key: str) -> list:
-    """Process image and return list of converted image URLs"""
+def process_image(key: str) -> tuple[list, int]:
+    """Process image and return list of converted image URLs and total size in bytes"""
     converted_image_urls = []
+    total_size_bytes = 0
 
     response = s3.get_object(Bucket=IMAGE_BUCKET, Key=key)
     input_bytes = response["Body"].read()
@@ -102,6 +156,7 @@ def process_image(key: str) -> list:
             ContentType=response.get("ContentType", "application/octet-stream"),
             CacheControl="public, max-age=31536000, immutable",
         )
+        total_size_bytes += original_size
 
         original_url = f"{AWS_CDN_DOMAIN}/{original_output_key}"
         converted_image_urls.append(
@@ -153,6 +208,7 @@ def process_image(key: str) -> list:
                 ContentType=content_type,
                 CacheControl="public, max-age=31536000, immutable",
             )
+            total_size_bytes += file_size
 
             url = f"{AWS_CDN_DOMAIN}/{output_key}"
             converted_image_urls.append(
@@ -169,5 +225,6 @@ def process_image(key: str) -> list:
 
     s3.delete_object(Bucket=IMAGE_BUCKET, Key=key)
     print(f"Deleted original image from {key}")
+    print(f"Total size of processed images: {format_size(total_size_bytes)}")
 
-    return converted_image_urls
+    return converted_image_urls, total_size_bytes

@@ -66,11 +66,16 @@ export default function UploadPage() {
     setDragActive(false);
 
     const allowedTypes = ["image/png", "image/jpeg"];
+    const maxSize = 10 * 1024 * 1024; // 10MB
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const newFile = Array.from(e.dataTransfer.files).find((f) =>
         allowedTypes.includes(f.type)
       );
       if (newFile) {
+        if (newFile.size > maxSize) {
+          alert("File size exceeds 10MB limit");
+          return;
+        }
         setFile(newFile);
       } else {
         alert("Please select a PNG or JPEG file");
@@ -81,11 +86,17 @@ export default function UploadPage() {
   const handleFileSelect = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const allowedTypes = ["image/png", "image/jpeg"];
+      const maxSize = 10 * 1024 * 1024; // 10MB
       if (e.target.files && e.target.files[0]) {
         const newFile = Array.from(e.target.files).find((f) =>
           allowedTypes.includes(f.type)
         );
         if (newFile) {
+          if (newFile.size > maxSize) {
+            alert("File size exceeds 10MB limit");
+            e.target.value = "";
+            return;
+          }
           setFile(newFile);
         } else {
           alert("Please select a PNG or JPEG file");
@@ -102,13 +113,13 @@ export default function UploadPage() {
 
   const handleUpload = useCallback(async () => {
     if (!file) return;
+    setUploading(true);
 
     const { fields, url, fileKey } = await fetchPresignedUrl({
       contentType: file.type,
       fileName: file.name,
     });
 
-    setUploading(true);
     const formData = new FormData();
     Object.entries(fields).forEach(([key, value]) => {
       formData.append(key, value);
