@@ -39,7 +39,7 @@ def update_usage_metric(user_id: str, total_size_bytes: int):
 
         # Check if usage metric exists for user
         cursor.execute(
-            'SELECT id, "totalStorageUsed" FROM "UsageMetric" WHERE "usesrId" = %s',
+            'SELECT id, "totalStorageUsed" FROM "UsageMetric" WHERE "userId" = %s',
             (user_id,),
         )
         existing = cursor.fetchone()
@@ -50,7 +50,7 @@ def update_usage_metric(user_id: str, total_size_bytes: int):
             cursor.execute(
                 """UPDATE "UsageMetric" 
                    SET "totalStorageUsed" = %s, "updatedAt" = NOW() 
-                   WHERE "usesrId" = %s""",
+                   WHERE "userId" = %s""",
                 (new_total, user_id),
             )
             print(f"Updated usage metric for user {user_id}: {new_total}MB total")
@@ -60,7 +60,7 @@ def update_usage_metric(user_id: str, total_size_bytes: int):
 
             metric_id = str(uuid.uuid4())[:25]  # cuid-like id
             cursor.execute(
-                """INSERT INTO "UsageMetric" (id, "usesrId", "totalStorageUsed", "createdAt", "updatedAt")
+                """INSERT INTO "UsageMetric" (id, "userId", "totalStorageUsed", "createdAt", "updatedAt")
                    VALUES (%s, %s, %s, NOW(), NOW())""",
                 (metric_id, user_id, total_size_mb),
             )
