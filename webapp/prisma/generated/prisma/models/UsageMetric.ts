@@ -31,13 +31,13 @@ export type UsageMetricAvgAggregateOutputType = {
 }
 
 export type UsageMetricSumAggregateOutputType = {
-  totalStorageUsed: number | null
+  totalStorageUsed: bigint | null
 }
 
 export type UsageMetricMinAggregateOutputType = {
   id: string | null
   userId: string | null
-  totalStorageUsed: number | null
+  totalStorageUsed: bigint | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -45,7 +45,7 @@ export type UsageMetricMinAggregateOutputType = {
 export type UsageMetricMaxAggregateOutputType = {
   id: string | null
   userId: string | null
-  totalStorageUsed: number | null
+  totalStorageUsed: bigint | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -182,7 +182,7 @@ export type UsageMetricGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 export type UsageMetricGroupByOutputType = {
   id: string
   userId: string
-  totalStorageUsed: number
+  totalStorageUsed: bigint
   createdAt: Date
   updatedAt: Date
   _count: UsageMetricCountAggregateOutputType | null
@@ -213,7 +213,7 @@ export type UsageMetricWhereInput = {
   NOT?: Prisma.UsageMetricWhereInput | Prisma.UsageMetricWhereInput[]
   id?: Prisma.StringFilter<"UsageMetric"> | string
   userId?: Prisma.StringFilter<"UsageMetric"> | string
-  totalStorageUsed?: Prisma.IntFilter<"UsageMetric"> | number
+  totalStorageUsed?: Prisma.BigIntFilter<"UsageMetric"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"UsageMetric"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UsageMetric"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -234,7 +234,7 @@ export type UsageMetricWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.UsageMetricWhereInput | Prisma.UsageMetricWhereInput[]
   OR?: Prisma.UsageMetricWhereInput[]
   NOT?: Prisma.UsageMetricWhereInput | Prisma.UsageMetricWhereInput[]
-  totalStorageUsed?: Prisma.IntFilter<"UsageMetric"> | number
+  totalStorageUsed?: Prisma.BigIntFilter<"UsageMetric"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"UsageMetric"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UsageMetric"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -259,14 +259,14 @@ export type UsageMetricScalarWhereWithAggregatesInput = {
   NOT?: Prisma.UsageMetricScalarWhereWithAggregatesInput | Prisma.UsageMetricScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"UsageMetric"> | string
   userId?: Prisma.StringWithAggregatesFilter<"UsageMetric"> | string
-  totalStorageUsed?: Prisma.IntWithAggregatesFilter<"UsageMetric"> | number
+  totalStorageUsed?: Prisma.BigIntWithAggregatesFilter<"UsageMetric"> | bigint | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"UsageMetric"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"UsageMetric"> | Date | string
 }
 
 export type UsageMetricCreateInput = {
   id?: string
-  totalStorageUsed?: number
+  totalStorageUsed?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutUsageMetricsInput
@@ -275,14 +275,14 @@ export type UsageMetricCreateInput = {
 export type UsageMetricUncheckedCreateInput = {
   id?: string
   userId: string
-  totalStorageUsed?: number
+  totalStorageUsed?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type UsageMetricUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  totalStorageUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  totalStorageUsed?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutUsageMetricsNestedInput
@@ -291,7 +291,7 @@ export type UsageMetricUpdateInput = {
 export type UsageMetricUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  totalStorageUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  totalStorageUsed?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -299,14 +299,14 @@ export type UsageMetricUncheckedUpdateInput = {
 export type UsageMetricCreateManyInput = {
   id?: string
   userId: string
-  totalStorageUsed?: number
+  totalStorageUsed?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type UsageMetricUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  totalStorageUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  totalStorageUsed?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -314,7 +314,7 @@ export type UsageMetricUpdateManyMutationInput = {
 export type UsageMetricUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  totalStorageUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  totalStorageUsed?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -388,24 +388,24 @@ export type UsageMetricUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UsageMetricUpdateToOneWithWhereWithoutUserInput, Prisma.UsageMetricUpdateWithoutUserInput>, Prisma.UsageMetricUncheckedUpdateWithoutUserInput>
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type BigIntFieldUpdateOperationsInput = {
+  set?: bigint | number
+  increment?: bigint | number
+  decrement?: bigint | number
+  multiply?: bigint | number
+  divide?: bigint | number
 }
 
 export type UsageMetricCreateWithoutUserInput = {
   id?: string
-  totalStorageUsed?: number
+  totalStorageUsed?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type UsageMetricUncheckedCreateWithoutUserInput = {
   id?: string
-  totalStorageUsed?: number
+  totalStorageUsed?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -428,14 +428,14 @@ export type UsageMetricUpdateToOneWithWhereWithoutUserInput = {
 
 export type UsageMetricUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  totalStorageUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  totalStorageUsed?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UsageMetricUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  totalStorageUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  totalStorageUsed?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -496,7 +496,7 @@ export type $UsageMetricPayload<ExtArgs extends runtime.Types.Extensions.Interna
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
-    totalStorageUsed: number
+    totalStorageUsed: bigint
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["usageMetric"]>
@@ -925,7 +925,7 @@ export interface Prisma__UsageMetricClient<T, Null = never, ExtArgs extends runt
 export interface UsageMetricFieldRefs {
   readonly id: Prisma.FieldRef<"UsageMetric", 'String'>
   readonly userId: Prisma.FieldRef<"UsageMetric", 'String'>
-  readonly totalStorageUsed: Prisma.FieldRef<"UsageMetric", 'Int'>
+  readonly totalStorageUsed: Prisma.FieldRef<"UsageMetric", 'BigInt'>
   readonly createdAt: Prisma.FieldRef<"UsageMetric", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"UsageMetric", 'DateTime'>
 }

@@ -24,11 +24,11 @@ export default async function DashboardPage() {
     where: { userId },
   });
 
-  // Get total storage from Prisma UsageMetric
+  // Get total storage from Prisma UsageMetric (stored in bytes)
   const usageMetric = await prisma.usageMetric.findUnique({
     where: { userId: userId },
   });
-  const totalBytes = (usageMetric?.totalStorageUsed ?? 0) * 1024 * 1024; // Convert MB to bytes
+  const totalBytes = Number(usageMetric?.totalStorageUsed ?? 0);
   storageUsed = formatBytes(totalBytes);
 
   return (

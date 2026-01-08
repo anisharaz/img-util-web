@@ -26,12 +26,10 @@ def format_size(size_bytes: int) -> str:
 
 
 def update_usage_metric(user_id: str, total_size_bytes: int):
-    """Update or create UsageMetric for the user in PostgreSQL"""
+    """Update or create UsageMetric for the user in PostgreSQL (stores bytes)"""
     if not DATABASE_URL:
         print("DATABASE_URL not set, skipping usage metric update")
         return
-
-    total_size_mb = total_size_bytes // (1024 * 1024)  # Convert to MB
 
     try:
         conn = psycopg2.connect(DATABASE_URL)
@@ -46,14 +44,14 @@ def update_usage_metric(user_id: str, total_size_bytes: int):
 
         if existing:
             # Update existing record by adding to total storage
-            new_total = existing[1] + total_size_mb
+            new_total = existing[1] + total_size_bytes
             cursor.execute(
                 """UPDATE "UsageMetric" 
                    SET "totalStorageUsed" = %s, "updatedAt" = NOW() 
                    WHERE "userId" = %s""",
                 (new_total, user_id),
             )
-            print(f"Updated usage metric for user {user_id}: {new_total}MB total")
+            print(f"Updated usage metric for user {user_id}: {format_size(new_total)} total")
         else:
             # Create new record
             import uuid
@@ -62,9 +60,9 @@ def update_usage_metric(user_id: str, total_size_bytes: int):
             cursor.execute(
                 """INSERT INTO "UsageMetric" (id, "userId", "totalStorageUsed", "createdAt", "updatedAt")
                    VALUES (%s, %s, %s, NOW(), NOW())""",
-                (metric_id, user_id, total_size_mb),
+                (metric_id, user_id, total_size_bytes),
             )
-            print(f"Created usage metric for user {user_id}: {total_size_mb}MB")
+            print(f"Created usage metric for user {user_id}: {format_size(total_size_bytes)}")
 
         conn.commit()
         cursor.close()
