@@ -11,7 +11,7 @@ import {
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import prisma from "@/lib/db";
-import { getTotalStorageForUser, formatBytes } from "@/lib/aws";
+import { formatBytes } from "@/lib/aws";
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -24,11 +24,11 @@ export default async function DashboardPage() {
     where: { userId },
   });
 
-  // Get total storage from DynamoDB
-  const totalBytes = await getTotalStorageForUser({
-    userId: userId as string,
-    tableName: process.env.DYNAMODB_TABLE_NAME as string,
+  // Get total storage from Prisma UsageMetric
+  const usageMetric = await prisma.usageMetric.findUnique({
+    where: { userId: userId },
   });
+  const totalBytes = (usageMetric?.totalStorageUsed ?? 0) * 1024 * 1024; // Convert MB to bytes
   storageUsed = formatBytes(totalBytes);
 
   return (
