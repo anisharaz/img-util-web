@@ -964,7 +964,7 @@ export type ImagesScalarFieldEnum = (typeof ImagesScalarFieldEnum)[keyof typeof 
 
 export const UsageMetricScalarFieldEnum = {
   id: 'id',
-  usesrId: 'usesrId',
+  userId: 'userId',
   totalStorageUsed: 'totalStorageUsed',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

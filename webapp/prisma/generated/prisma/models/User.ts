@@ -209,7 +209,7 @@ export type UserWhereInput = {
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
   images?: Prisma.ImagesListRelationFilter
-  usageMetrics?: Prisma.UsageMetricListRelationFilter
+  usageMetrics?: Prisma.XOR<Prisma.UsageMetricNullableScalarRelationFilter, Prisma.UsageMetricWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
@@ -224,7 +224,7 @@ export type UserOrderByWithRelationInput = {
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   images?: Prisma.ImagesOrderByRelationAggregateInput
-  usageMetrics?: Prisma.UsageMetricOrderByRelationAggregateInput
+  usageMetrics?: Prisma.UsageMetricOrderByWithRelationInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -242,7 +242,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
   images?: Prisma.ImagesListRelationFilter
-  usageMetrics?: Prisma.UsageMetricListRelationFilter
+  usageMetrics?: Prisma.XOR<Prisma.UsageMetricNullableScalarRelationFilter, Prisma.UsageMetricWhereInput> | null
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -285,7 +285,7 @@ export type UserCreateInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   images?: Prisma.ImagesCreateNestedManyWithoutUserInput
-  usageMetrics?: Prisma.UsageMetricCreateNestedManyWithoutUserInput
+  usageMetrics?: Prisma.UsageMetricCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -300,7 +300,7 @@ export type UserUncheckedCreateInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   images?: Prisma.ImagesUncheckedCreateNestedManyWithoutUserInput
-  usageMetrics?: Prisma.UsageMetricUncheckedCreateNestedManyWithoutUserInput
+  usageMetrics?: Prisma.UsageMetricUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -315,7 +315,7 @@ export type UserUpdateInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   images?: Prisma.ImagesUpdateManyWithoutUserNestedInput
-  usageMetrics?: Prisma.UsageMetricUpdateManyWithoutUserNestedInput
+  usageMetrics?: Prisma.UsageMetricUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -330,7 +330,7 @@ export type UserUncheckedUpdateInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   images?: Prisma.ImagesUncheckedUpdateManyWithoutUserNestedInput
-  usageMetrics?: Prisma.UsageMetricUncheckedUpdateManyWithoutUserNestedInput
+  usageMetrics?: Prisma.UsageMetricUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -487,7 +487,7 @@ export type UserCreateWithoutSessionsInput = {
   completedSignup?: string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   images?: Prisma.ImagesCreateNestedManyWithoutUserInput
-  usageMetrics?: Prisma.UsageMetricCreateNestedManyWithoutUserInput
+  usageMetrics?: Prisma.UsageMetricCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -501,7 +501,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   completedSignup?: string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   images?: Prisma.ImagesUncheckedCreateNestedManyWithoutUserInput
-  usageMetrics?: Prisma.UsageMetricUncheckedCreateNestedManyWithoutUserInput
+  usageMetrics?: Prisma.UsageMetricUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -531,7 +531,7 @@ export type UserUpdateWithoutSessionsInput = {
   completedSignup?: Prisma.StringFieldUpdateOperationsInput | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   images?: Prisma.ImagesUpdateManyWithoutUserNestedInput
-  usageMetrics?: Prisma.UsageMetricUpdateManyWithoutUserNestedInput
+  usageMetrics?: Prisma.UsageMetricUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -545,7 +545,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   completedSignup?: Prisma.StringFieldUpdateOperationsInput | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   images?: Prisma.ImagesUncheckedUpdateManyWithoutUserNestedInput
-  usageMetrics?: Prisma.UsageMetricUncheckedUpdateManyWithoutUserNestedInput
+  usageMetrics?: Prisma.UsageMetricUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -559,7 +559,7 @@ export type UserCreateWithoutAccountsInput = {
   completedSignup?: string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   images?: Prisma.ImagesCreateNestedManyWithoutUserInput
-  usageMetrics?: Prisma.UsageMetricCreateNestedManyWithoutUserInput
+  usageMetrics?: Prisma.UsageMetricCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -573,7 +573,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   completedSignup?: string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   images?: Prisma.ImagesUncheckedCreateNestedManyWithoutUserInput
-  usageMetrics?: Prisma.UsageMetricUncheckedCreateNestedManyWithoutUserInput
+  usageMetrics?: Prisma.UsageMetricUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -603,7 +603,7 @@ export type UserUpdateWithoutAccountsInput = {
   completedSignup?: Prisma.StringFieldUpdateOperationsInput | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   images?: Prisma.ImagesUpdateManyWithoutUserNestedInput
-  usageMetrics?: Prisma.UsageMetricUpdateManyWithoutUserNestedInput
+  usageMetrics?: Prisma.UsageMetricUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -617,7 +617,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   completedSignup?: Prisma.StringFieldUpdateOperationsInput | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   images?: Prisma.ImagesUncheckedUpdateManyWithoutUserNestedInput
-  usageMetrics?: Prisma.UsageMetricUncheckedUpdateManyWithoutUserNestedInput
+  usageMetrics?: Prisma.UsageMetricUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutImagesInput = {
@@ -631,7 +631,7 @@ export type UserCreateWithoutImagesInput = {
   completedSignup?: string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  usageMetrics?: Prisma.UsageMetricCreateNestedManyWithoutUserInput
+  usageMetrics?: Prisma.UsageMetricCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutImagesInput = {
@@ -645,7 +645,7 @@ export type UserUncheckedCreateWithoutImagesInput = {
   completedSignup?: string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  usageMetrics?: Prisma.UsageMetricUncheckedCreateNestedManyWithoutUserInput
+  usageMetrics?: Prisma.UsageMetricUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutImagesInput = {
@@ -675,7 +675,7 @@ export type UserUpdateWithoutImagesInput = {
   completedSignup?: Prisma.StringFieldUpdateOperationsInput | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  usageMetrics?: Prisma.UsageMetricUpdateManyWithoutUserNestedInput
+  usageMetrics?: Prisma.UsageMetricUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutImagesInput = {
@@ -689,7 +689,7 @@ export type UserUncheckedUpdateWithoutImagesInput = {
   completedSignup?: Prisma.StringFieldUpdateOperationsInput | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  usageMetrics?: Prisma.UsageMetricUncheckedUpdateManyWithoutUserNestedInput
+  usageMetrics?: Prisma.UsageMetricUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUsageMetricsInput = {
@@ -773,14 +773,12 @@ export type UserCountOutputType = {
   sessions: number
   accounts: number
   images: number
-  usageMetrics: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
   accounts?: boolean | UserCountOutputTypeCountAccountsArgs
   images?: boolean | UserCountOutputTypeCountImagesArgs
-  usageMetrics?: boolean | UserCountOutputTypeCountUsageMetricsArgs
 }
 
 /**
@@ -812,13 +810,6 @@ export type UserCountOutputTypeCountAccountsArgs<ExtArgs extends runtime.Types.E
  */
 export type UserCountOutputTypeCountImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ImagesWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountUsageMetricsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.UsageMetricWhereInput
 }
 
 
@@ -888,7 +879,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     sessions: Prisma.$SessionPayload<ExtArgs>[]
     accounts: Prisma.$AccountPayload<ExtArgs>[]
     images: Prisma.$ImagesPayload<ExtArgs>[]
-    usageMetrics: Prisma.$UsageMetricPayload<ExtArgs>[]
+    usageMetrics: Prisma.$UsageMetricPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1296,7 +1287,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   images<T extends Prisma.User$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ImagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  usageMetrics<T extends Prisma.User$usageMetricsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$usageMetricsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UsageMetricPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  usageMetrics<T extends Prisma.User$usageMetricsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$usageMetricsArgs<ExtArgs>>): Prisma.Prisma__UsageMetricClient<runtime.Types.Result.GetResult<Prisma.$UsageMetricPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1810,11 +1801,6 @@ export type User$usageMetricsArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   include?: Prisma.UsageMetricInclude<ExtArgs> | null
   where?: Prisma.UsageMetricWhereInput
-  orderBy?: Prisma.UsageMetricOrderByWithRelationInput | Prisma.UsageMetricOrderByWithRelationInput[]
-  cursor?: Prisma.UsageMetricWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.UsageMetricScalarFieldEnum | Prisma.UsageMetricScalarFieldEnum[]
 }
 
 /**

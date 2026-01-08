@@ -36,7 +36,7 @@ export type UsageMetricSumAggregateOutputType = {
 
 export type UsageMetricMinAggregateOutputType = {
   id: string | null
-  usesrId: string | null
+  userId: string | null
   totalStorageUsed: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -44,7 +44,7 @@ export type UsageMetricMinAggregateOutputType = {
 
 export type UsageMetricMaxAggregateOutputType = {
   id: string | null
-  usesrId: string | null
+  userId: string | null
   totalStorageUsed: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -52,7 +52,7 @@ export type UsageMetricMaxAggregateOutputType = {
 
 export type UsageMetricCountAggregateOutputType = {
   id: number
-  usesrId: number
+  userId: number
   totalStorageUsed: number
   createdAt: number
   updatedAt: number
@@ -70,7 +70,7 @@ export type UsageMetricSumAggregateInputType = {
 
 export type UsageMetricMinAggregateInputType = {
   id?: true
-  usesrId?: true
+  userId?: true
   totalStorageUsed?: true
   createdAt?: true
   updatedAt?: true
@@ -78,7 +78,7 @@ export type UsageMetricMinAggregateInputType = {
 
 export type UsageMetricMaxAggregateInputType = {
   id?: true
-  usesrId?: true
+  userId?: true
   totalStorageUsed?: true
   createdAt?: true
   updatedAt?: true
@@ -86,7 +86,7 @@ export type UsageMetricMaxAggregateInputType = {
 
 export type UsageMetricCountAggregateInputType = {
   id?: true
-  usesrId?: true
+  userId?: true
   totalStorageUsed?: true
   createdAt?: true
   updatedAt?: true
@@ -181,7 +181,7 @@ export type UsageMetricGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 
 export type UsageMetricGroupByOutputType = {
   id: string
-  usesrId: string
+  userId: string
   totalStorageUsed: number
   createdAt: Date
   updatedAt: Date
@@ -212,7 +212,7 @@ export type UsageMetricWhereInput = {
   OR?: Prisma.UsageMetricWhereInput[]
   NOT?: Prisma.UsageMetricWhereInput | Prisma.UsageMetricWhereInput[]
   id?: Prisma.StringFilter<"UsageMetric"> | string
-  usesrId?: Prisma.StringFilter<"UsageMetric"> | string
+  userId?: Prisma.StringFilter<"UsageMetric"> | string
   totalStorageUsed?: Prisma.IntFilter<"UsageMetric"> | number
   createdAt?: Prisma.DateTimeFilter<"UsageMetric"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UsageMetric"> | Date | string
@@ -221,7 +221,7 @@ export type UsageMetricWhereInput = {
 
 export type UsageMetricOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  usesrId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   totalStorageUsed?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -230,19 +230,19 @@ export type UsageMetricOrderByWithRelationInput = {
 
 export type UsageMetricWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  userId?: string
   AND?: Prisma.UsageMetricWhereInput | Prisma.UsageMetricWhereInput[]
   OR?: Prisma.UsageMetricWhereInput[]
   NOT?: Prisma.UsageMetricWhereInput | Prisma.UsageMetricWhereInput[]
-  usesrId?: Prisma.StringFilter<"UsageMetric"> | string
   totalStorageUsed?: Prisma.IntFilter<"UsageMetric"> | number
   createdAt?: Prisma.DateTimeFilter<"UsageMetric"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UsageMetric"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id">
+}, "id" | "userId">
 
 export type UsageMetricOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  usesrId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   totalStorageUsed?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -258,7 +258,7 @@ export type UsageMetricScalarWhereWithAggregatesInput = {
   OR?: Prisma.UsageMetricScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UsageMetricScalarWhereWithAggregatesInput | Prisma.UsageMetricScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"UsageMetric"> | string
-  usesrId?: Prisma.StringWithAggregatesFilter<"UsageMetric"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"UsageMetric"> | string
   totalStorageUsed?: Prisma.IntWithAggregatesFilter<"UsageMetric"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"UsageMetric"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"UsageMetric"> | Date | string
@@ -274,7 +274,7 @@ export type UsageMetricCreateInput = {
 
 export type UsageMetricUncheckedCreateInput = {
   id?: string
-  usesrId: string
+  userId: string
   totalStorageUsed?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -290,7 +290,7 @@ export type UsageMetricUpdateInput = {
 
 export type UsageMetricUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  usesrId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   totalStorageUsed?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -298,7 +298,7 @@ export type UsageMetricUncheckedUpdateInput = {
 
 export type UsageMetricCreateManyInput = {
   id?: string
-  usesrId: string
+  userId: string
   totalStorageUsed?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -313,25 +313,20 @@ export type UsageMetricUpdateManyMutationInput = {
 
 export type UsageMetricUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  usesrId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   totalStorageUsed?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type UsageMetricListRelationFilter = {
-  every?: Prisma.UsageMetricWhereInput
-  some?: Prisma.UsageMetricWhereInput
-  none?: Prisma.UsageMetricWhereInput
-}
-
-export type UsageMetricOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
+export type UsageMetricNullableScalarRelationFilter = {
+  is?: Prisma.UsageMetricWhereInput | null
+  isNot?: Prisma.UsageMetricWhereInput | null
 }
 
 export type UsageMetricCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  usesrId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   totalStorageUsed?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -343,7 +338,7 @@ export type UsageMetricAvgOrderByAggregateInput = {
 
 export type UsageMetricMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  usesrId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   totalStorageUsed?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -351,7 +346,7 @@ export type UsageMetricMaxOrderByAggregateInput = {
 
 export type UsageMetricMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  usesrId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   totalStorageUsed?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -361,46 +356,36 @@ export type UsageMetricSumOrderByAggregateInput = {
   totalStorageUsed?: Prisma.SortOrder
 }
 
-export type UsageMetricCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.UsageMetricCreateWithoutUserInput, Prisma.UsageMetricUncheckedCreateWithoutUserInput> | Prisma.UsageMetricCreateWithoutUserInput[] | Prisma.UsageMetricUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.UsageMetricCreateOrConnectWithoutUserInput | Prisma.UsageMetricCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.UsageMetricCreateManyUserInputEnvelope
-  connect?: Prisma.UsageMetricWhereUniqueInput | Prisma.UsageMetricWhereUniqueInput[]
+export type UsageMetricCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.UsageMetricCreateWithoutUserInput, Prisma.UsageMetricUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.UsageMetricCreateOrConnectWithoutUserInput
+  connect?: Prisma.UsageMetricWhereUniqueInput
 }
 
-export type UsageMetricUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.UsageMetricCreateWithoutUserInput, Prisma.UsageMetricUncheckedCreateWithoutUserInput> | Prisma.UsageMetricCreateWithoutUserInput[] | Prisma.UsageMetricUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.UsageMetricCreateOrConnectWithoutUserInput | Prisma.UsageMetricCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.UsageMetricCreateManyUserInputEnvelope
-  connect?: Prisma.UsageMetricWhereUniqueInput | Prisma.UsageMetricWhereUniqueInput[]
+export type UsageMetricUncheckedCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.UsageMetricCreateWithoutUserInput, Prisma.UsageMetricUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.UsageMetricCreateOrConnectWithoutUserInput
+  connect?: Prisma.UsageMetricWhereUniqueInput
 }
 
-export type UsageMetricUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.UsageMetricCreateWithoutUserInput, Prisma.UsageMetricUncheckedCreateWithoutUserInput> | Prisma.UsageMetricCreateWithoutUserInput[] | Prisma.UsageMetricUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.UsageMetricCreateOrConnectWithoutUserInput | Prisma.UsageMetricCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.UsageMetricUpsertWithWhereUniqueWithoutUserInput | Prisma.UsageMetricUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.UsageMetricCreateManyUserInputEnvelope
-  set?: Prisma.UsageMetricWhereUniqueInput | Prisma.UsageMetricWhereUniqueInput[]
-  disconnect?: Prisma.UsageMetricWhereUniqueInput | Prisma.UsageMetricWhereUniqueInput[]
-  delete?: Prisma.UsageMetricWhereUniqueInput | Prisma.UsageMetricWhereUniqueInput[]
-  connect?: Prisma.UsageMetricWhereUniqueInput | Prisma.UsageMetricWhereUniqueInput[]
-  update?: Prisma.UsageMetricUpdateWithWhereUniqueWithoutUserInput | Prisma.UsageMetricUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.UsageMetricUpdateManyWithWhereWithoutUserInput | Prisma.UsageMetricUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.UsageMetricScalarWhereInput | Prisma.UsageMetricScalarWhereInput[]
+export type UsageMetricUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.UsageMetricCreateWithoutUserInput, Prisma.UsageMetricUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.UsageMetricCreateOrConnectWithoutUserInput
+  upsert?: Prisma.UsageMetricUpsertWithoutUserInput
+  disconnect?: Prisma.UsageMetricWhereInput | boolean
+  delete?: Prisma.UsageMetricWhereInput | boolean
+  connect?: Prisma.UsageMetricWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsageMetricUpdateToOneWithWhereWithoutUserInput, Prisma.UsageMetricUpdateWithoutUserInput>, Prisma.UsageMetricUncheckedUpdateWithoutUserInput>
 }
 
-export type UsageMetricUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.UsageMetricCreateWithoutUserInput, Prisma.UsageMetricUncheckedCreateWithoutUserInput> | Prisma.UsageMetricCreateWithoutUserInput[] | Prisma.UsageMetricUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.UsageMetricCreateOrConnectWithoutUserInput | Prisma.UsageMetricCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.UsageMetricUpsertWithWhereUniqueWithoutUserInput | Prisma.UsageMetricUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.UsageMetricCreateManyUserInputEnvelope
-  set?: Prisma.UsageMetricWhereUniqueInput | Prisma.UsageMetricWhereUniqueInput[]
-  disconnect?: Prisma.UsageMetricWhereUniqueInput | Prisma.UsageMetricWhereUniqueInput[]
-  delete?: Prisma.UsageMetricWhereUniqueInput | Prisma.UsageMetricWhereUniqueInput[]
-  connect?: Prisma.UsageMetricWhereUniqueInput | Prisma.UsageMetricWhereUniqueInput[]
-  update?: Prisma.UsageMetricUpdateWithWhereUniqueWithoutUserInput | Prisma.UsageMetricUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.UsageMetricUpdateManyWithWhereWithoutUserInput | Prisma.UsageMetricUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.UsageMetricScalarWhereInput | Prisma.UsageMetricScalarWhereInput[]
+export type UsageMetricUncheckedUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.UsageMetricCreateWithoutUserInput, Prisma.UsageMetricUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.UsageMetricCreateOrConnectWithoutUserInput
+  upsert?: Prisma.UsageMetricUpsertWithoutUserInput
+  disconnect?: Prisma.UsageMetricWhereInput | boolean
+  delete?: Prisma.UsageMetricWhereInput | boolean
+  connect?: Prisma.UsageMetricWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsageMetricUpdateToOneWithWhereWithoutUserInput, Prisma.UsageMetricUpdateWithoutUserInput>, Prisma.UsageMetricUncheckedUpdateWithoutUserInput>
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -430,43 +415,15 @@ export type UsageMetricCreateOrConnectWithoutUserInput = {
   create: Prisma.XOR<Prisma.UsageMetricCreateWithoutUserInput, Prisma.UsageMetricUncheckedCreateWithoutUserInput>
 }
 
-export type UsageMetricCreateManyUserInputEnvelope = {
-  data: Prisma.UsageMetricCreateManyUserInput | Prisma.UsageMetricCreateManyUserInput[]
-  skipDuplicates?: boolean
-}
-
-export type UsageMetricUpsertWithWhereUniqueWithoutUserInput = {
-  where: Prisma.UsageMetricWhereUniqueInput
+export type UsageMetricUpsertWithoutUserInput = {
   update: Prisma.XOR<Prisma.UsageMetricUpdateWithoutUserInput, Prisma.UsageMetricUncheckedUpdateWithoutUserInput>
   create: Prisma.XOR<Prisma.UsageMetricCreateWithoutUserInput, Prisma.UsageMetricUncheckedCreateWithoutUserInput>
+  where?: Prisma.UsageMetricWhereInput
 }
 
-export type UsageMetricUpdateWithWhereUniqueWithoutUserInput = {
-  where: Prisma.UsageMetricWhereUniqueInput
+export type UsageMetricUpdateToOneWithWhereWithoutUserInput = {
+  where?: Prisma.UsageMetricWhereInput
   data: Prisma.XOR<Prisma.UsageMetricUpdateWithoutUserInput, Prisma.UsageMetricUncheckedUpdateWithoutUserInput>
-}
-
-export type UsageMetricUpdateManyWithWhereWithoutUserInput = {
-  where: Prisma.UsageMetricScalarWhereInput
-  data: Prisma.XOR<Prisma.UsageMetricUpdateManyMutationInput, Prisma.UsageMetricUncheckedUpdateManyWithoutUserInput>
-}
-
-export type UsageMetricScalarWhereInput = {
-  AND?: Prisma.UsageMetricScalarWhereInput | Prisma.UsageMetricScalarWhereInput[]
-  OR?: Prisma.UsageMetricScalarWhereInput[]
-  NOT?: Prisma.UsageMetricScalarWhereInput | Prisma.UsageMetricScalarWhereInput[]
-  id?: Prisma.StringFilter<"UsageMetric"> | string
-  usesrId?: Prisma.StringFilter<"UsageMetric"> | string
-  totalStorageUsed?: Prisma.IntFilter<"UsageMetric"> | number
-  createdAt?: Prisma.DateTimeFilter<"UsageMetric"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"UsageMetric"> | Date | string
-}
-
-export type UsageMetricCreateManyUserInput = {
-  id?: string
-  totalStorageUsed?: number
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type UsageMetricUpdateWithoutUserInput = {
@@ -483,18 +440,11 @@ export type UsageMetricUncheckedUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type UsageMetricUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  totalStorageUsed?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
 
 
 export type UsageMetricSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  usesrId?: boolean
+  userId?: boolean
   totalStorageUsed?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -503,7 +453,7 @@ export type UsageMetricSelect<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type UsageMetricSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  usesrId?: boolean
+  userId?: boolean
   totalStorageUsed?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -512,7 +462,7 @@ export type UsageMetricSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
 
 export type UsageMetricSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  usesrId?: boolean
+  userId?: boolean
   totalStorageUsed?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -521,13 +471,13 @@ export type UsageMetricSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 
 export type UsageMetricSelectScalar = {
   id?: boolean
-  usesrId?: boolean
+  userId?: boolean
   totalStorageUsed?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UsageMetricOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "usesrId" | "totalStorageUsed" | "createdAt" | "updatedAt", ExtArgs["result"]["usageMetric"]>
+export type UsageMetricOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "totalStorageUsed" | "createdAt" | "updatedAt", ExtArgs["result"]["usageMetric"]>
 export type UsageMetricInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -545,7 +495,7 @@ export type $UsageMetricPayload<ExtArgs extends runtime.Types.Extensions.Interna
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    usesrId: string
+    userId: string
     totalStorageUsed: number
     createdAt: Date
     updatedAt: Date
@@ -974,7 +924,7 @@ export interface Prisma__UsageMetricClient<T, Null = never, ExtArgs extends runt
  */
 export interface UsageMetricFieldRefs {
   readonly id: Prisma.FieldRef<"UsageMetric", 'String'>
-  readonly usesrId: Prisma.FieldRef<"UsageMetric", 'String'>
+  readonly userId: Prisma.FieldRef<"UsageMetric", 'String'>
   readonly totalStorageUsed: Prisma.FieldRef<"UsageMetric", 'Int'>
   readonly createdAt: Prisma.FieldRef<"UsageMetric", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"UsageMetric", 'DateTime'>
