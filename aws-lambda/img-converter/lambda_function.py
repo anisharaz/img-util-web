@@ -51,7 +51,9 @@ def update_usage_metric(user_id: str, total_size_bytes: int):
                    WHERE "userId" = %s""",
                 (new_total, user_id),
             )
-            print(f"Updated usage metric for user {user_id}: {format_size(new_total)} total")
+            print(
+                f"Updated usage metric for user {user_id}: {format_size(new_total)} total"
+            )
         else:
             # Create new record
             import uuid
@@ -62,7 +64,9 @@ def update_usage_metric(user_id: str, total_size_bytes: int):
                    VALUES (%s, %s, %s, NOW(), NOW())""",
                 (metric_id, user_id, total_size_bytes),
             )
-            print(f"Created usage metric for user {user_id}: {format_size(total_size_bytes)}")
+            print(
+                f"Created usage metric for user {user_id}: {format_size(total_size_bytes)}"
+            )
 
         conn.commit()
         cursor.close()
@@ -160,7 +164,7 @@ def process_image(key: str) -> tuple[list, int]:
         converted_image_urls.append(
             {
                 "resolution": f"{width}x{height}",
-                "size": format_size(original_size),
+                "size": original_size,
                 "url": original_url,
             }
         )
@@ -212,7 +216,7 @@ def process_image(key: str) -> tuple[list, int]:
             converted_image_urls.append(
                 {
                     "resolution": f"{resized_width}x{resized_height}",
-                    "size": format_size(file_size),
+                    "size": file_size,
                     "url": url,
                 }
             )
