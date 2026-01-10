@@ -966,6 +966,7 @@ export const UsageMetricScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   totalStorageUsed: 'totalStorageUsed',
+  totalStorageLimit: 'totalStorageLimit',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

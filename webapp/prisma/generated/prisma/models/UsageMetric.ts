@@ -28,16 +28,19 @@ export type AggregateUsageMetric = {
 
 export type UsageMetricAvgAggregateOutputType = {
   totalStorageUsed: number | null
+  totalStorageLimit: number | null
 }
 
 export type UsageMetricSumAggregateOutputType = {
   totalStorageUsed: bigint | null
+  totalStorageLimit: bigint | null
 }
 
 export type UsageMetricMinAggregateOutputType = {
   id: string | null
   userId: string | null
   totalStorageUsed: bigint | null
+  totalStorageLimit: bigint | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -46,6 +49,7 @@ export type UsageMetricMaxAggregateOutputType = {
   id: string | null
   userId: string | null
   totalStorageUsed: bigint | null
+  totalStorageLimit: bigint | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,6 +58,7 @@ export type UsageMetricCountAggregateOutputType = {
   id: number
   userId: number
   totalStorageUsed: number
+  totalStorageLimit: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -62,16 +67,19 @@ export type UsageMetricCountAggregateOutputType = {
 
 export type UsageMetricAvgAggregateInputType = {
   totalStorageUsed?: true
+  totalStorageLimit?: true
 }
 
 export type UsageMetricSumAggregateInputType = {
   totalStorageUsed?: true
+  totalStorageLimit?: true
 }
 
 export type UsageMetricMinAggregateInputType = {
   id?: true
   userId?: true
   totalStorageUsed?: true
+  totalStorageLimit?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -80,6 +88,7 @@ export type UsageMetricMaxAggregateInputType = {
   id?: true
   userId?: true
   totalStorageUsed?: true
+  totalStorageLimit?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -88,6 +97,7 @@ export type UsageMetricCountAggregateInputType = {
   id?: true
   userId?: true
   totalStorageUsed?: true
+  totalStorageLimit?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -183,6 +193,7 @@ export type UsageMetricGroupByOutputType = {
   id: string
   userId: string
   totalStorageUsed: bigint
+  totalStorageLimit: bigint
   createdAt: Date
   updatedAt: Date
   _count: UsageMetricCountAggregateOutputType | null
@@ -214,6 +225,7 @@ export type UsageMetricWhereInput = {
   id?: Prisma.StringFilter<"UsageMetric"> | string
   userId?: Prisma.StringFilter<"UsageMetric"> | string
   totalStorageUsed?: Prisma.BigIntFilter<"UsageMetric"> | bigint | number
+  totalStorageLimit?: Prisma.BigIntFilter<"UsageMetric"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"UsageMetric"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UsageMetric"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -223,6 +235,7 @@ export type UsageMetricOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   totalStorageUsed?: Prisma.SortOrder
+  totalStorageLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -235,6 +248,7 @@ export type UsageMetricWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.UsageMetricWhereInput[]
   NOT?: Prisma.UsageMetricWhereInput | Prisma.UsageMetricWhereInput[]
   totalStorageUsed?: Prisma.BigIntFilter<"UsageMetric"> | bigint | number
+  totalStorageLimit?: Prisma.BigIntFilter<"UsageMetric"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"UsageMetric"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UsageMetric"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -244,6 +258,7 @@ export type UsageMetricOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   totalStorageUsed?: Prisma.SortOrder
+  totalStorageLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UsageMetricCountOrderByAggregateInput
@@ -260,6 +275,7 @@ export type UsageMetricScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"UsageMetric"> | string
   userId?: Prisma.StringWithAggregatesFilter<"UsageMetric"> | string
   totalStorageUsed?: Prisma.BigIntWithAggregatesFilter<"UsageMetric"> | bigint | number
+  totalStorageLimit?: Prisma.BigIntWithAggregatesFilter<"UsageMetric"> | bigint | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"UsageMetric"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"UsageMetric"> | Date | string
 }
@@ -267,6 +283,7 @@ export type UsageMetricScalarWhereWithAggregatesInput = {
 export type UsageMetricCreateInput = {
   id?: string
   totalStorageUsed?: bigint | number
+  totalStorageLimit?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutUsageMetricsInput
@@ -276,6 +293,7 @@ export type UsageMetricUncheckedCreateInput = {
   id?: string
   userId: string
   totalStorageUsed?: bigint | number
+  totalStorageLimit?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -283,6 +301,7 @@ export type UsageMetricUncheckedCreateInput = {
 export type UsageMetricUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   totalStorageUsed?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  totalStorageLimit?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutUsageMetricsNestedInput
@@ -292,6 +311,7 @@ export type UsageMetricUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   totalStorageUsed?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  totalStorageLimit?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -300,6 +320,7 @@ export type UsageMetricCreateManyInput = {
   id?: string
   userId: string
   totalStorageUsed?: bigint | number
+  totalStorageLimit?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -307,6 +328,7 @@ export type UsageMetricCreateManyInput = {
 export type UsageMetricUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   totalStorageUsed?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  totalStorageLimit?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -315,6 +337,7 @@ export type UsageMetricUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   totalStorageUsed?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  totalStorageLimit?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -328,18 +351,21 @@ export type UsageMetricCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   totalStorageUsed?: Prisma.SortOrder
+  totalStorageLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type UsageMetricAvgOrderByAggregateInput = {
   totalStorageUsed?: Prisma.SortOrder
+  totalStorageLimit?: Prisma.SortOrder
 }
 
 export type UsageMetricMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   totalStorageUsed?: Prisma.SortOrder
+  totalStorageLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -348,12 +374,14 @@ export type UsageMetricMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   totalStorageUsed?: Prisma.SortOrder
+  totalStorageLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type UsageMetricSumOrderByAggregateInput = {
   totalStorageUsed?: Prisma.SortOrder
+  totalStorageLimit?: Prisma.SortOrder
 }
 
 export type UsageMetricCreateNestedOneWithoutUserInput = {
@@ -399,6 +427,7 @@ export type BigIntFieldUpdateOperationsInput = {
 export type UsageMetricCreateWithoutUserInput = {
   id?: string
   totalStorageUsed?: bigint | number
+  totalStorageLimit?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -406,6 +435,7 @@ export type UsageMetricCreateWithoutUserInput = {
 export type UsageMetricUncheckedCreateWithoutUserInput = {
   id?: string
   totalStorageUsed?: bigint | number
+  totalStorageLimit?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -429,6 +459,7 @@ export type UsageMetricUpdateToOneWithWhereWithoutUserInput = {
 export type UsageMetricUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   totalStorageUsed?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  totalStorageLimit?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -436,6 +467,7 @@ export type UsageMetricUpdateWithoutUserInput = {
 export type UsageMetricUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   totalStorageUsed?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  totalStorageLimit?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -446,6 +478,7 @@ export type UsageMetricSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   id?: boolean
   userId?: boolean
   totalStorageUsed?: boolean
+  totalStorageLimit?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -455,6 +488,7 @@ export type UsageMetricSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   userId?: boolean
   totalStorageUsed?: boolean
+  totalStorageLimit?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -464,6 +498,7 @@ export type UsageMetricSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   userId?: boolean
   totalStorageUsed?: boolean
+  totalStorageLimit?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -473,11 +508,12 @@ export type UsageMetricSelectScalar = {
   id?: boolean
   userId?: boolean
   totalStorageUsed?: boolean
+  totalStorageLimit?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UsageMetricOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "totalStorageUsed" | "createdAt" | "updatedAt", ExtArgs["result"]["usageMetric"]>
+export type UsageMetricOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "totalStorageUsed" | "totalStorageLimit" | "createdAt" | "updatedAt", ExtArgs["result"]["usageMetric"]>
 export type UsageMetricInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -497,6 +533,7 @@ export type $UsageMetricPayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: string
     userId: string
     totalStorageUsed: bigint
+    totalStorageLimit: bigint
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["usageMetric"]>
@@ -926,6 +963,7 @@ export interface UsageMetricFieldRefs {
   readonly id: Prisma.FieldRef<"UsageMetric", 'String'>
   readonly userId: Prisma.FieldRef<"UsageMetric", 'String'>
   readonly totalStorageUsed: Prisma.FieldRef<"UsageMetric", 'BigInt'>
+  readonly totalStorageLimit: Prisma.FieldRef<"UsageMetric", 'BigInt'>
   readonly createdAt: Prisma.FieldRef<"UsageMetric", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"UsageMetric", 'DateTime'>
 }

@@ -89,10 +89,11 @@ model Images {
 }
 
 model UsageMetric {
-  id               String   @id @default(cuid())
-  userId           String   @unique
-  user             User     @relation(fields: [userId], references: [id])
-  totalStorageUsed BigInt   @default(0) // in bytes
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id])
+  totalStorageUsed  BigInt   @default(0) // in bytes
+  totalStorageLimit BigInt   @default(52428800) // 50 MB in bytes
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
