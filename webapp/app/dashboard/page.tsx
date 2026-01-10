@@ -11,7 +11,7 @@ import {
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import prisma from "@/lib/db";
-import { formatBytes } from "@/lib/aws";
+import { formatBytes } from "@/lib/utils";
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({ headers: await headers() });

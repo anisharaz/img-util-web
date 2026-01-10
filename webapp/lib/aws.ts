@@ -9,7 +9,7 @@ import {
 } from "@aws-sdk/lib-dynamodb";
 
 export interface ConvertedImageUrl {
-  size: string;
+  size: number;
   resolution: string;
   url: string;
 }
@@ -120,12 +120,4 @@ export async function deleteImageFromDynamoDB({
   });
 
   await docClient.send(command);
-}
-
-export function formatBytes(bytes: number): string {
-  if (bytes === 0) return "0 Bytes";
-  const k = 1024;
-  const sizes = ["Bytes", "KB", "MB", "GB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 }

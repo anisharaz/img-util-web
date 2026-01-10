@@ -11,24 +11,6 @@ import { headers } from "next/headers";
 import prisma from "@/lib/db";
 import { redirect } from "next/navigation";
 
-// Parse size string (e.g., "1.2 MB", "500 KB") to bytes
-function parseSizeToBytes(sizeStr: string): number {
-  const match = sizeStr.match(/^([\d.]+)\s*(Bytes|KB|MB|GB)$/i);
-  if (!match) return 0;
-
-  const value = parseFloat(match[1]);
-  const unit = match[2].toUpperCase();
-
-  const multipliers: Record<string, number> = {
-    BYTES: 1,
-    KB: 1024,
-    MB: 1024 * 1024,
-    GB: 1024 * 1024 * 1024,
-  };
-
-  return Math.round(value * (multipliers[unit] || 0));
-}
-
 export async function fetchPresignedUrl({
   contentType,
   fileName,
@@ -78,7 +60,7 @@ export async function deleteImage(imageId: string) {
   let bytesToDeduct = 0;
   if (dynamoImage?.convertedImageUrls) {
     bytesToDeduct = dynamoImage.convertedImageUrls.reduce((total, img) => {
-      return total + parseSizeToBytes(img.size);
+      return total + img.size;
     }, 0);
   }
 

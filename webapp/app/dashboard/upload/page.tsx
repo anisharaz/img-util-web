@@ -3,7 +3,7 @@ import { AlertTriangle } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import prisma from "@/lib/db";
-import { formatBytes } from "@/lib/aws";
+import { formatBytes } from "@/lib/utils";
 import {
   Card,
   CardContent,

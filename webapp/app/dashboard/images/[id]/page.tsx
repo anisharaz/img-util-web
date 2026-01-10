@@ -18,6 +18,7 @@ import { CopyButton } from "./copy-button";
 import { DeleteButton } from "./delete-button";
 import { AutoReload } from "./auto-reload";
 import prisma from "@/lib/db";
+import { formatBytes } from "@/lib/utils";
 
 export default async function ImageDetailPage({
   params,
@@ -132,7 +133,9 @@ export default async function ImageDetailPage({
             <CardDescription>
               {isProcessing
                 ? "Processing..."
-                : `${originalImage?.resolution} • ${originalImage?.size} • ${format}`}
+                : `${originalImage?.resolution} • ${
+                    originalImage ? formatBytes(originalImage.size) : "N/A"
+                  } • ${format}`}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -200,7 +203,11 @@ export default async function ImageDetailPage({
             <div>
               <p className="text-sm text-muted-foreground">File Size</p>
               <p className="font-medium">
-                {isProcessing ? "Processing..." : originalImage?.size || "N/A"}
+                {isProcessing
+                  ? "Processing..."
+                  : originalImage
+                  ? formatBytes(originalImage.size)
+                  : "N/A"}
               </p>
             </div>
             <Separator />
@@ -269,7 +276,9 @@ export default async function ImageDetailPage({
                         {version.resolution}
                       </span>
                     </div>
-                    <p className="text-sm font-medium">{version.size}</p>
+                    <p className="text-sm font-medium">
+                      {formatBytes(version.size)}
+                    </p>
                     <CopyButton url={version.url} />
                   </div>
                 </div>
