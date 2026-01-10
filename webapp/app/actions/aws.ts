@@ -1,10 +1,33 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { GeneratePreSignedUrl, deleteImageFromDynamoDB } from "@/lib/aws";
+import {
+  GeneratePreSignedUrl,
+  deleteImageFromDynamoDB,
+  imagesFromDynamodb,
+  type DynamoDBImage,
+} from "@/lib/aws";
 import { headers } from "next/headers";
 import prisma from "@/lib/db";
 import { redirect } from "next/navigation";
+
+// Parse size string (e.g., "1.2 MB", "500 KB") to bytes
+function parseSizeToBytes(sizeStr: string): number {
+  const match = sizeStr.match(/^([\d.]+)\s*(Bytes|KB|MB|GB)$/i);
+  if (!match) return 0;
+
+  const value = parseFloat(match[1]);
+  const unit = match[2].toUpperCase();
+
+  const multipliers: Record<string, number> = {
+    BYTES: 1,
+    KB: 1024,
+    MB: 1024 * 1024,
+    GB: 1024 * 1024 * 1024,
+  };
+
+  return Math.round(value * (multipliers[unit] || 0));
+}
 
 export async function fetchPresignedUrl({
   contentType,
@@ -44,6 +67,21 @@ export async function deleteImage(imageId: string) {
     throw new Error("Image not found");
   }
 
+  // Fetch image details from DynamoDB to calculate storage to deduct
+  const dynamoImage = (await imagesFromDynamodb({
+    userId,
+    imageId,
+    tableName: process.env.DYNAMODB_TABLE_NAME as string,
+  })) as DynamoDBImage | undefined;
+
+  // Calculate total bytes to deduct from usage
+  let bytesToDeduct = 0;
+  if (dynamoImage?.convertedImageUrls) {
+    bytesToDeduct = dynamoImage.convertedImageUrls.reduce((total, img) => {
+      return total + parseSizeToBytes(img.size);
+    }, 0);
+  }
+
   // Delete from DynamoDB
   await deleteImageFromDynamoDB({
     userId,
@@ -57,6 +95,20 @@ export async function deleteImage(imageId: string) {
       id: prismaImage.id,
     },
   });
+
+  // Update UsageMetric to deduct storage
+  if (bytesToDeduct > 0) {
+    await prisma.usageMetric.update({
+      where: {
+        userId: userId,
+      },
+      data: {
+        totalStorageUsed: {
+          decrement: BigInt(bytesToDeduct),
+        },
+      },
+    });
+  }
 
   redirect("/dashboard/images");
 }
