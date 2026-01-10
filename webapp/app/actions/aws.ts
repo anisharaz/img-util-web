@@ -23,9 +23,20 @@ export async function fetchPresignedUrl({
     throw new Error("Unauthorized");
   }
   const userId = session.user.id;
+
+  // Sanitize filename for URL safety
+  const sanitizedFileName = fileName
+    .normalize("NFD") // Normalize unicode characters
+    .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+    .replace(/[^a-zA-Z0-9._-]/g, "_") // Replace unsafe chars with underscore
+    .replace(/_{2,}/g, "_") // Collapse multiple underscores
+    .replace(/^_|_$/g, "") // Trim leading/trailing underscores
+    .toLowerCase()
+    .slice(0, 200); // Limit length
+
   const fileKey = `instantuploads/${userId}/${new Date()
     .toISOString()
-    .replace(/[:.]/g, "-")}_${fileName}`;
+    .replace(/[:.]/g, "-")}_${sanitizedFileName || "file"}`;
   const { fields, url } = await GeneratePreSignedUrl(fileKey, contentType);
   return { fields, url, fileKey };
 }
