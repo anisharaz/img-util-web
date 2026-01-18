@@ -1,15 +1,16 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import Image from "next/image";
 import {
   ImageIcon,
   Zap,
   Copy,
   Cloud,
-  Upload,
   ArrowRight,
-  Check,
+  Github,
   Globe,
+  Server,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,16 +41,22 @@ export default async function Home() {
           </Link>
           <nav className="hidden items-center gap-6 md:flex">
             <Link
+              href="#architecture"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Architecture
+            </Link>
+            <Link
               href="#features"
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               Features
             </Link>
             <Link
-              href="#how-it-works"
+              href="#tech-stack"
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
-              How It Works
+              Tech Stack
             </Link>
           </nav>
           <div className="flex items-center gap-3">
@@ -57,7 +64,7 @@ export default async function Home() {
               <Link href="/auth/sign-in">Sign In</Link>
             </Button>
             <Button size="sm" asChild>
-              <Link href="/dashboard">Get Started</Link>
+              <Link href="/dashboard">Try Demo</Link>
             </Button>
           </div>
         </div>
@@ -65,59 +72,104 @@ export default async function Home() {
 
       <main>
         {/* Hero Section */}
-        <section className="container mx-auto max-w-6xl px-4 py-24 md:py-32">
+        <section className="container mx-auto max-w-6xl px-4 py-16 md:py-24">
           <div className="flex flex-col items-center text-center">
             <Badge variant="secondary" className="mb-4">
-              Fast • Simple • CDN Delivered
+              🚀 Personal Project • Open Source
             </Badge>
             <h1 className="max-w-3xl text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-              Resize Images Instantly,{" "}
-              <span className="text-primary">Copy URLs in Seconds</span>
+              Cloud-Native{" "}
+              <span className="text-primary">Image Processing</span> Pipeline
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
-              Upload your photos and get multiple resized versions ready to use.
-              One-click URL copying makes sharing effortless. No complex tools,
-              no waiting.
+              A serverless image resizing and CDN delivery system built with AWS
+              Lambda, S3, CloudFront, and Next.js. Upload images and get
+              instantly resized versions with CDN-backed URLs.
             </p>
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <Button size="lg" asChild>
                 <Link href="/dashboard">
-                  Start Resizing
+                  Try the Demo
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="#how-it-works">See How It Works</Link>
+                <Link href="#architecture">View Architecture</Link>
               </Button>
             </div>
           </div>
+        </section>
 
-          {/* Hero Visual */}
-          <div className="mt-16 flex justify-center">
-            <div className="relative w-full max-w-3xl rounded-xl border bg-muted/30 p-8">
-              <div className="flex flex-col items-center gap-6 md:flex-row md:justify-center">
-                <div className="flex h-32 w-32 items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 bg-background">
-                  <Upload className="h-8 w-8 text-muted-foreground" />
+        <Separator />
+
+        {/* Architecture Section - Main Focus */}
+        <section
+          id="architecture"
+          className="container mx-auto max-w-6xl px-4 py-16"
+        >
+          <div className="text-center">
+            <Badge variant="outline" className="mb-4">
+              System Design
+            </Badge>
+            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+              Architecture Overview
+            </h2>
+            <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+              A fully serverless architecture leveraging AWS services for
+              scalable, cost-effective image processing.
+            </p>
+          </div>
+
+          {/* Architecture Diagram */}
+          <div className="mt-12">
+            <Card className="overflow-hidden">
+              <CardContent className="p-0">
+                <div className="relative w-full bg-muted/20">
+                  <Image
+                    src="/arch.png"
+                    alt="ImageUtil Architecture Diagram - AWS Lambda, S3, CloudFront, Next.js"
+                    width={1200}
+                    height={800}
+                    className="w-full h-auto"
+                    priority
+                  />
                 </div>
-                <ArrowRight className="h-6 w-6 rotate-90 text-muted-foreground md:rotate-0" />
-                <div className="flex gap-3">
-                  <div className="flex h-16 w-16 items-center justify-center rounded border bg-background text-xs font-medium">
-                    128px
-                  </div>
-                  <div className="flex h-20 w-20 items-center justify-center rounded border bg-background text-xs font-medium">
-                    256px
-                  </div>
-                  <div className="flex h-24 w-24 items-center justify-center rounded border bg-background text-xs font-medium">
-                    512px
-                  </div>
-                </div>
-                <ArrowRight className="h-6 w-6 rotate-90 text-muted-foreground md:rotate-0" />
-                <div className="flex h-20 w-32 items-center justify-center rounded-lg border bg-background">
-                  <Copy className="mr-2 h-4 w-4 text-primary" />
-                  <span className="text-sm font-medium">Copy URL</span>
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Architecture Highlights */}
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            <Card className="border-dashed">
+              <CardHeader>
+                <Server className="h-8 w-8 text-orange-500" />
+                <CardTitle className="mt-3 text-lg">AWS Lambda</CardTitle>
+                <CardDescription>
+                  Serverless image processing with Python (Pillow) triggered by
+                  S3 events. Auto-scales to handle any load.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+            <Card className="border-dashed">
+              <CardHeader>
+                <Cloud className="h-8 w-8 text-blue-500" />
+                <CardTitle className="mt-3 text-lg">S3 + CloudFront</CardTitle>
+                <CardDescription>
+                  Original and resized images stored in S3, delivered globally
+                  via CloudFront CDN for low latency.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+            <Card className="border-dashed">
+              <CardHeader>
+                <Globe className="h-8 w-8 text-green-500" />
+                <CardTitle className="mt-3 text-lg">Next.js + Prisma</CardTitle>
+                <CardDescription>
+                  Modern React frontend with server components, backed by
+                  PostgreSQL via Prisma ORM.
+                </CardDescription>
+              </CardHeader>
+            </Card>
           </div>
         </section>
 
@@ -126,24 +178,24 @@ export default async function Home() {
         {/* Features Section */}
         <section
           id="features"
-          className="container mx-auto max-w-6xl px-4 py-24"
+          className="container mx-auto max-w-6xl px-4 py-16"
         >
           <div className="text-center">
             <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-              Everything You Need
+              Key Features
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              Simple tools designed to save you time and effort.
+              Built for simplicity and developer experience.
             </p>
           </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
             <Card>
               <CardHeader>
                 <Zap className="h-10 w-10 text-primary" />
-                <CardTitle className="mt-4">Instant Resize</CardTitle>
+                <CardTitle className="mt-4">Instant Processing</CardTitle>
                 <CardDescription>
-                  Upload once, get multiple sizes immediately. No waiting, no
-                  processing delays.
+                  Images are automatically resized to multiple dimensions (128,
+                  256, 512, 1024px) immediately after upload via Lambda.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -152,28 +204,28 @@ export default async function Home() {
                 <Copy className="h-10 w-10 text-primary" />
                 <CardTitle className="mt-4">One-Click Copy</CardTitle>
                 <CardDescription>
-                  Copy image URLs instantly with a single click. Perfect for
-                  quick sharing.
+                  Copy CDN-backed image URLs instantly. Each size has its own
+                  URL for easy embedding.
                 </CardDescription>
               </CardHeader>
             </Card>
             <Card>
               <CardHeader>
                 <Cloud className="h-10 w-10 text-primary" />
-                <CardTitle className="mt-4">Cloud Storage</CardTitle>
+                <CardTitle className="mt-4">Presigned Uploads</CardTitle>
                 <CardDescription>
-                  Your images are stored securely and available whenever you
-                  need them.
+                  Direct-to-S3 uploads using presigned URLs. No server bandwidth
+                  bottleneck, faster uploads.
                 </CardDescription>
               </CardHeader>
             </Card>
             <Card>
               <CardHeader>
                 <Globe className="h-10 w-10 text-primary" />
-                <CardTitle className="mt-4">CDN Delivery</CardTitle>
+                <CardTitle className="mt-4">Global CDN</CardTitle>
                 <CardDescription>
-                  Images are delivered via a global CDN for lightning-fast
-                  loading anywhere in the world.
+                  CloudFront edge locations ensure images load fast anywhere in
+                  the world.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -182,81 +234,68 @@ export default async function Home() {
 
         <Separator />
 
-        {/* How It Works Section */}
+        {/* Tech Stack Section */}
         <section
-          id="how-it-works"
-          className="container mx-auto max-w-6xl px-4 py-24"
+          id="tech-stack"
+          className="container mx-auto max-w-6xl px-4 py-16"
         >
           <div className="text-center">
             <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-              How It Works
+              Tech Stack
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              Three simple steps to resize and share your images.
+              Modern tools and services powering this project.
             </p>
           </div>
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
-            <div className="flex flex-col items-center text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground">
-                1
-              </div>
-              <h3 className="mt-6 text-xl font-semibold">Upload</h3>
-              <p className="mt-2 text-muted-foreground">
-                Drag and drop or select your image file. We support all common
-                formats.
-              </p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground">
-                2
-              </div>
-              <h3 className="mt-6 text-xl font-semibold">Resize</h3>
-              <p className="mt-2 text-muted-foreground">
-                Your image is automatically resized to multiple dimensions
-                instantly.
-              </p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground">
-                3
-              </div>
-              <h3 className="mt-6 text-xl font-semibold">Copy & Use</h3>
-              <p className="mt-2 text-muted-foreground">
-                Click any size to copy its URL. Paste anywhere and you&apos;re
-                done.
-              </p>
-            </div>
+          <div className="mt-12 flex flex-wrap justify-center gap-3">
+            {[
+              "Next.js 15",
+              "React 19",
+              "TypeScript",
+              "Tailwind CSS",
+              "Prisma",
+              "PostgreSQL",
+              "AWS Lambda",
+              "AWS S3",
+              "CloudFront",
+              "Python",
+              "Pillow",
+              "Better Auth",
+              "shadcn/ui",
+            ].map((tech) => (
+              <Badge
+                key={tech}
+                variant="secondary"
+                className="text-sm px-4 py-2"
+              >
+                {tech}
+              </Badge>
+            ))}
           </div>
         </section>
 
         <Separator />
 
         {/* CTA Section */}
-        <section className="container mx-auto max-w-6xl px-4 py-24">
-          <Card className="bg-primary text-primary-foreground">
+        <section className="container mx-auto max-w-6xl px-4 py-16">
+          <Card className="bg-muted/50">
             <CardContent className="flex flex-col items-center p-12 text-center">
+              <Github className="h-12 w-12 text-muted-foreground mb-4" />
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                Ready to Get Started?
+                Check It Out
               </h2>
-              <p className="mt-4 max-w-xl text-primary-foreground/80">
-                Join thousands of users who save time with ImageUtil. Upload
-                your first image and see the difference.
+              <p className="mt-4 max-w-xl text-muted-foreground">
+                This is a personal project exploring serverless architecture and
+                modern web development. Feel free to try the demo or check out
+                the code.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                <Button size="lg" variant="secondary" asChild>
+                <Button size="lg" asChild>
                   <Link href="/dashboard">
-                    Start for Free
+                    Try the Demo
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-              </div>
-              <div className="mt-6 flex items-center gap-4 text-sm text-primary-foreground/70">
-                <span className="flex items-center gap-1">
-                  <Check className="h-4 w-4" /> No credit card required
-                </span>
-                <span className="flex items-center gap-1">
-                  <Check className="h-4 w-4" /> Free to use
-                </span>
               </div>
             </CardContent>
           </Card>
@@ -271,22 +310,8 @@ export default async function Home() {
             <span className="font-medium">ImageUtil</span>
           </div>
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} ImageUtil. All rights reserved.
+            A personal project by Anish • {new Date().getFullYear()}
           </p>
-          <nav className="flex gap-6">
-            <Link
-              href="#"
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Privacy
-            </Link>
-            <Link
-              href="#"
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Terms
-            </Link>
-          </nav>
         </div>
       </footer>
     </div>
